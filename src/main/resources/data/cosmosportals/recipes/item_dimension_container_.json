@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	
+	"ingredients": [
+        {
+            "item": "cosmosportals:item_dimension_container"
+        }
+	],
+	
+	"result": {
+		"item": "cosmosportals:item_dimension_container"
+	}
+}

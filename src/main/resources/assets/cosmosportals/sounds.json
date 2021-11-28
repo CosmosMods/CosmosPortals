@@ -1,0 +1,6 @@
+{ 
+	"portal_travel": { 
+	   "category" : "block", 
+	   "sounds": [ "cosmosportals:portal_travel" ]
+    }
+}

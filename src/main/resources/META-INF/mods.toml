@@ -1,0 +1,64 @@
+#dimensionalpocketsii
+modLoader="javafml" #mandatory
+loaderVersion="[36.2,)" #mandatory
+license="All Rights Reserved" #mandatory
+logoFile="cosmic_logo.png" #optional
+	
+[[mods]] #mandatory
+	modId="cosmosportals" #mandatory
+	version="1.16.5-1.0.40" #mandatory
+	displayName="Cosmos Portals" #mandatory
+	displayURL="https://www.curseforge.com/minecraft/mc-mods/cosmos-portals" #optional
+	credits="XCompWiz for the idea from MystCraft" #optional
+	authors="TheCosmicNebula" #optional
+	description='''
+Create Portals to anywhere, from anywhere!
+'''
+
+[[dependencies.cosmosportals]] #optional
+    modId="cosmoslibrary" #mandatory
+    mandatory=true #mandatory
+    versionRange="[1.16.5-6.7,)" #mandatory
+    ordering="BEFORE"
+    side="BOTH"
+[[dependencies.cosmosportals]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[36.2,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.cosmosportals]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5]"
+    ordering="NONE"
+    side="BOTH"
+
+#cosmoslibrary
+modLoader="javafml" #mandatory
+loaderVersion="[36.2,)" #mandatory
+license="All Rights Reserved" #mandatory
+logoFile="cosmos_logo.png" #optional
+
+[[mods]] #mandatory
+	modId="cosmoslibrary" #mandatory
+	version="1.16.5-6.7.36" #mandatory
+	displayName="Cosmos Library" #mandatory
+	displayURL="https://www.curseforge.com/minecraft/mc-mods/cosmos-library" #optional
+	authors="TheCosmicNebula" #optional
+	description='''
+Library and API for TheCosmicNebula's Mods.
+'''
+
+[[dependencies.cosmoslibrary]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[36.2,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.cosmoslibrary]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5]"
+    ordering="NONE"
+    side="BOTH"
