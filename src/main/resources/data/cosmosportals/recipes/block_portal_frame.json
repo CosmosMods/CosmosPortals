@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"CDC",
+		"DBD",
+		"CDC"
+	],
+	"key": {
+		"C": {
+			"item": "cosmosportals:item_cosmic_ingot"
+		},
+		"B": {
+			"item": "cosmosportals:block_cosmic"
+		},
+		"D": {
+			"item": "cosmosportals:item_cosmic_material"
+		}
+	},
+	"result": {
+		"item": "cosmosportals:block_portal_frame",
+		"count": 2
+	}
+}

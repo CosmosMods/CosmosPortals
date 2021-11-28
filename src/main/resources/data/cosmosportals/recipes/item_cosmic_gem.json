@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" D ",
+		"DPD",
+		" D "
+	],
+	"key": {
+		"D": {
+			"item": "cosmosportals:item_cosmic_material"
+		},
+		"P": {
+			"item": "minecraft:diamond"
+		}
+	},
+	"result": {
+		"item": "cosmosportals:item_cosmic_gem",
+		"count": 2
+	}
+}

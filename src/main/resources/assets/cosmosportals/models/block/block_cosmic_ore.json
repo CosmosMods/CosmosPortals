@@ -1,0 +1,6 @@
+{
+    "parent": "cosmoslibrary:block/modblock",
+    "textures": {
+    	"all": "cosmosportals:blocks/cosmic_ore"
+    }
+}

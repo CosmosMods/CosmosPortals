@@ -1,0 +1,107 @@
+{
+	"advancements.dimensional.materials.title": "Dimensional Materials!",
+	"advancements.dimensional.materials.desc": "Mine some Dimensional Ore.",
+	"advancements.dimensional.pockets.title": "Pockets!",
+	"advancements.dimensional.pockets.desc": "Craft a Pocket for the first time.",
+	"advancements.dimensional.nether_star.title": "Splitting the Stars",
+	"advancements.dimensional.nether_star.desc": "Split a nether star into shards.",
+	"advancements.dimensional.ingot.title": "Gearing Up!",
+	"advancements.dimensional.ingot.desc": "Obtain some Dimensional Ingots.",
+	
+	"itemGroup.cosmosportals": "Cosmos Portals",
+	
+	"item.cosmosportals.item_dimension_container": "Dimension Container",
+	"item.cosmosportals.item_cosmic_material": "Cosmic Material",
+	"item.cosmosportals.item_cosmic_ingot": "Cosmic Ingot",
+	"item.cosmosportals.item_cosmic_pearl": "Cosmic Pearl",
+	"item.cosmosportals.item_cosmic_gem": "Cosmic Gem",
+	
+	"block.cosmosportals.block_portal": "Dimensional Portal",
+	"block.cosmosportals.block_portal_frame": "Portal Frame",
+	"block.cosmosportals.block_portal_dock": "Portal Dock",
+	
+	"block.cosmosportals.block_cosmic_ore": "Cosmic Ore",
+	"block.cosmosportals.block_cosmic": "Cosmic Block",
+
+	"cosmosportals.modid": "Cosmos Portals",
+	"cosmosportals.version": "[1.16.5-1.0.40]",
+	
+	"cosmosportals.gui.config.name": "Cosmos Portals Config",
+	
+	"cosmosportals.gui.config.general_title": "General",
+	"cosmosportals.gui.config.messages_title": "Console Messages",
+	"cosmosportals.gui.config.visual_title": "Visual",
+	"cosmosportals.gui.config.missing": "Missing description.",
+	
+	"cosmosportals.gui.config.size": "Maximum Portal Size",
+	"cosmosportals.gui.config.size_slide": "Maximum Portal Size:",
+	"cosmosportals.gui.config.size_info": "Allows you to change the maximum size of Portals",
+	"cosmosportals.gui.config.size_info_two": "WARNING: Larger portals WILL create lag",
+	"cosmosportals.gui.config.size_info_three": "Limited to the range of between 2 and 9", 
+	
+	"cosmosportals.gui.config.sound.travel": "Portal Travel Sounds",
+	"cosmosportals.gui.config.sound.travel_info": "Whether this mod will play Portal Travel Sounds",
+	
+	"cosmosportals.gui.config.sound.ambient": "Ambient Portal Sounds",
+	"cosmosportals.gui.config.sound.ambient_info": "Whether this mod will play Ambient Portal Sounds",
+	
+	"cosmosportals.gui.config.message.info": "Info Messages",
+	"cosmosportals.gui.config.message.info_desc": "Whether this mod will print [INFO] messages to the console/log",
+	
+	"cosmosportals.gui.config.message.debug": "Debug Messages",
+	"cosmosportals.gui.config.message.debug_desc": "Whether this mod will print [DEBUG] messages to the console/log",
+	
+	"cosmosportals.gui.config.frame_textures": "Connected Textures [F]",
+	"cosmosportals.gui.config.frame_textures_info": "Whether or not Portal Frames use Connected Textures",
+	
+	"cosmosportals.gui.config.portal_textures": "Connected Textures [P]",
+	"cosmosportals.gui.config.portal_textures_info": "Whether or not Portals use Connected Textures",
+	
+	"cosmosportals.gui.config.labels": "Portal Labels",
+	"cosmosportals.gui.config.labels_info": "Whether or not Portal Labels are rendered",
+	
+	"cosmosportals.gui.config.particles": "Portal Particles",
+	"cosmosportals.gui.config.particles_info": "Whether or not Portal Particle Effects are rendered",
+	
+	"cosmosportals.gui.done": "Done",
+	
+	"cosmosportals.gui.dock": "Portal Dock",
+	
+	"cosmosportals.gui.dock.label_info": "Show or Hide Portal Dimension Labels.",
+	"cosmosportals.gui.dock.label_value": "Labels are currently:",
+	"cosmosportals.gui.dock.label_shown": "Shown",
+	"cosmosportals.gui.dock.label_hidden": "Hidden",
+	
+	"cosmosportals.gui.dock.sounds_info": "Play or Muffle Portal Sounds.",
+	"cosmosportals.gui.dock.sounds_value": "Sounds are currently:",
+	"cosmosportals.gui.dock.sounds_played": "Played",
+	"cosmosportals.gui.dock.sounds_muffled": "Muffled",
+	
+	"cosmosportals.gui.dock.entity_info": "Allow all Entities to pass, or only Players.",
+	"cosmosportals.gui.dock.entity_value": "Entities allowed:",
+	"cosmosportals.gui.dock.entity_all": "All Enities",
+	"cosmosportals.gui.dock.entity_player": "Players Only",
+	
+	"cosmosportals.gui.dock.particle_info": "Show or Hide Particle Effects.",
+	"cosmosportals.gui.dock.particle_value": "Particle Effects are currently:",
+	"cosmosportals.gui.dock.particle_shown": "Shown",
+	"cosmosportals.gui.dock.particle_hidden": "Hidden",
+	
+	"cosmosportals.item_info.container": "An item that stores a Positon and Dimension to be used in a Portal.",
+	"cosmosportals.item_info.container_one": "This item will store your Position and the Dimension you are in when used.",
+	"cosmosportals.item_info.container_two": "To record: simply shift-right-click.",
+	"cosmosportals.item_info.container_three": "To use: Shift-right-click on a Portal Dock.",
+	
+	"cosmosportals.item_info.container_position": "Recorded Position: ",
+	"cosmosportals.item_info.container_dimension": "Recorded Dimension: ",
+	"cosmosportals.item_message.container_recorded": "Dimension and Position Recorded!",
+	"cosmosportals.item_warning.container_stored": "This container already has a Recorded Dimension! Shift-right-click to overwrite.",
+	
+	"cosmosportals.block_info.frame": "Cosmic Portal Frame",
+	"cosmosportals.block_info.frame_one": "Safe for decoration.",
+	
+	"cosmosportals.block_info.dock": "Cosmic Portal Dock",
+	"cosmosportals.block_info.dock_one": "Portal Controller. Used to summon a Portal.",
+	"cosmosportals.block_info.dock_two": "To use: Shift-right-click an activated Dimension Container.",
+	"cosmosportals.block_info.dock_three": "Has a GUI, can be configured."
+}

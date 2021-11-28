@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "III",
+        "ISI",
+        "III"
+    ],
+    "key": {
+        "S": {
+            "item": "cosmosportals:item_cosmic_material"
+        },
+        "I" : {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+    "result": {
+        "item": "cosmosportals:item_cosmic_ingot",
+        "count": 8
+    }
+}
