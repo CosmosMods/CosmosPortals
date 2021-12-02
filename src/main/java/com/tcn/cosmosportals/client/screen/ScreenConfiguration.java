@@ -2,24 +2,28 @@ package com.tcn.cosmosportals.client.screen;
 
 import java.util.Arrays;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.tcn.cosmoslibrary.client.screen.option.BlankTitleOption;
-import com.tcn.cosmoslibrary.client.screen.option.CustomBooleanOption;
-import com.tcn.cosmoslibrary.client.screen.option.CustomBooleanOption.TYPE;
+import javax.annotation.Nullable;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.tcn.cosmoslibrary.client.screen.option.CosmosOptionBoolean;
+import com.tcn.cosmoslibrary.client.screen.option.CosmosOptionTitle;
+import com.tcn.cosmoslibrary.client.screen.option.CosmosOptionsList;
+import com.tcn.cosmoslibrary.client.screen.option.CosmosOptionBoolean.TYPE;
+import com.tcn.cosmoslibrary.client.screen.option.CosmosOptionsList.Entry;
 import com.tcn.cosmoslibrary.common.comp.CosmosColour;
 import com.tcn.cosmoslibrary.common.comp.CosmosCompHelper;
-import com.tcn.cosmosportals.core.management.CoreConfigurationManager;
+import com.tcn.cosmosportals.core.management.ConfigurationManager;
 
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.list.OptionsRowList;
-import net.minecraft.client.gui.widget.list.OptionsRowList.Row;
-import net.minecraft.client.settings.SliderPercentageOption;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.Style;
+import net.minecraft.client.ProgressOption;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fmlclient.ConfigGuiHandler;
+import net.minecraftforge.fmlclient.ConfigGuiHandler.ConfigGuiFactory;
 
 @OnlyIn(Dist.CLIENT)
 public final class ScreenConfiguration extends Screen {
@@ -36,8 +40,14 @@ public final class ScreenConfiguration extends Screen {
 	private final int BUTTON_HEIGHT = 20;
 	private final int DONE_BUTTON_TOP_OFFSET = 26;
 
-	private OptionsRowList optionsRowList;
-
+	private CosmosOptionsList optionsRowList;
+	
+	private static ConfigGuiHandler.ConfigGuiFactory INSTANCE = new ConfigGuiHandler.ConfigGuiFactory((mc, screen) -> new ScreenConfiguration(screen));
+	
+	public static ConfigGuiFactory getInstance() {
+		return INSTANCE;
+	}
+	
 	public ScreenConfiguration(Screen parent) {
 		super(CosmosCompHelper.locComp(CosmosColour.LIGHT_GRAY, true, "cosmosportals.gui.config.name"));
 
@@ -46,96 +56,92 @@ public final class ScreenConfiguration extends Screen {
 
 	@Override
 	protected void init() {
-		this.optionsRowList = new OptionsRowList(
-			this.minecraft, this.width, this.height,
-			OPTIONS_LIST_TOP_HEIGHT,
-			this.height - OPTIONS_LIST_BOTTOM_OFFSET,
-			OPTIONS_LIST_ITEM_HEIGHT);
+		this.optionsRowList = new CosmosOptionsList( this.minecraft, this.width, this.height,
+			OPTIONS_LIST_TOP_HEIGHT, this.height - OPTIONS_LIST_BOTTOM_OFFSET, OPTIONS_LIST_ITEM_HEIGHT
+		);
 
 		this.optionsRowList.addBig(
-			new BlankTitleOption(CosmosColour.GRAY, true, "cosmosportals.gui.config.general_title")
+			new CosmosOptionTitle(CosmosColour.GRAY, true, "cosmosportals.gui.config.general_title")
 		);
 		
 		this.optionsRowList.addBig(
-			new SliderPercentageOption(
+			new ProgressOption(
 				"cosmosportals.gui.config.size", 2, 9, 1.0F,
-				(options) -> (double) CoreConfigurationManager.getInstance().getPortalMaximumSize(),
-				(options, newValue) -> CoreConfigurationManager.getInstance().setPortalMaximumSize(newValue.intValue()),
+				(options) -> (double) ConfigurationManager.getInstance().getPortalMaximumSize(),
+				(options, newValue) -> ConfigurationManager.getInstance().setPortalMaximumSize(newValue.intValue()),
 				(options, option) -> CosmosCompHelper.locComp(CosmosColour.WHITE, false, "cosmosportals.gui.config.size_slide").append(CosmosCompHelper.locComp(CosmosColour.GREEN, true, " [ " + option.get(options) + " ]"))
 			)
 		);
 		
 		this.optionsRowList.addSmall(
-			new CustomBooleanOption(
+			new CosmosOptionBoolean(
 				CosmosColour.ORANGE, false, "cosmosportals.gui.config.sound.travel", TYPE.YES_NO,
-				(options) ->CoreConfigurationManager.getInstance().getPlayPortalTravelSounds(),
-				(options, newValue) -> CoreConfigurationManager.getInstance().setPlayPortalTravelSounds(newValue)),
-			new CustomBooleanOption(
+				(options) ->ConfigurationManager.getInstance().getPlayPortalTravelSounds(),
+				(options, newValue) -> ConfigurationManager.getInstance().setPlayPortalTravelSounds(newValue)),
+			new CosmosOptionBoolean(
 				CosmosColour.ORANGE, false, "cosmosportals.gui.config.sound.ambient", TYPE.YES_NO,
-				(options) -> CoreConfigurationManager.getInstance().getPlayPortalAmbientSounds(),
-				(options, newValue) -> CoreConfigurationManager.getInstance().setPlayPortalAmbientSounds(newValue)
+				(options) -> ConfigurationManager.getInstance().getPlayPortalAmbientSounds(),
+				(options, newValue) -> ConfigurationManager.getInstance().setPlayPortalAmbientSounds(newValue)
 			)
 		);
 		
 		this.optionsRowList.addBig(
-			new BlankTitleOption(CosmosColour.GRAY, true, "cosmosportals.gui.config.messages_title")
+			new CosmosOptionTitle(CosmosColour.GRAY, true, "cosmosportals.gui.config.messages_title")
 		);
 		
 		this.optionsRowList.addSmall(
-			new CustomBooleanOption(
+			new CosmosOptionBoolean(
 				CosmosColour.CYAN, false, "cosmosportals.gui.config.message.info", TYPE.ON_OFF,
-				(options) -> CoreConfigurationManager.getInstance().getInfoMessage(),
-				(options, newValue) -> CoreConfigurationManager.getInstance().setInfoMessage(newValue)
+				(options) -> ConfigurationManager.getInstance().getInfoMessage(),
+				(options, newValue) -> ConfigurationManager.getInstance().setInfoMessage(newValue)
 			),
-			new CustomBooleanOption(
+			new CosmosOptionBoolean(
 				CosmosColour.CYAN, false, "cosmosportals.gui.config.message.debug", TYPE.ON_OFF,
-				(options) -> CoreConfigurationManager.getInstance().getDebugMessage(),
-				(options, newValue) -> CoreConfigurationManager.getInstance().setDebugMessage(newValue)
+				(options) -> ConfigurationManager.getInstance().getDebugMessage(),
+				(options, newValue) -> ConfigurationManager.getInstance().setDebugMessage(newValue)
 			)
 		);
 
 		this.optionsRowList.addBig(
-			new BlankTitleOption(CosmosColour.GRAY, true, "cosmosportals.gui.config.visual_title")
+			new CosmosOptionTitle(CosmosColour.GRAY, true, "cosmosportals.gui.config.visual_title")
 		);
 		
 		this.optionsRowList.addSmall(
-			new CustomBooleanOption(
+			new CosmosOptionBoolean(
 				CosmosColour.LIGHT_BLUE, false, "cosmosportals.gui.config.frame_textures", TYPE.ON_OFF,
-				(options) -> CoreConfigurationManager.getInstance().getFrameConnectedTextures(),
-				(options, newValue) -> CoreConfigurationManager.getInstance().setFrameConnectedTextures(newValue)
+				(options) -> ConfigurationManager.getInstance().getFrameConnectedTextures(),
+				(options, newValue) -> ConfigurationManager.getInstance().setFrameConnectedTextures(newValue)
 			),
-			new CustomBooleanOption(
+			new CosmosOptionBoolean(
 				CosmosColour.LIGHT_BLUE, false, "cosmosportals.gui.config.portal_textures", TYPE.ON_OFF,
-				(options) -> CoreConfigurationManager.getInstance().getPortalConnectedTextures(),
-				(options, newValue) -> CoreConfigurationManager.getInstance().setPortalConnectedTextures(newValue)
+				(options) -> ConfigurationManager.getInstance().getPortalConnectedTextures(),
+				(options, newValue) -> ConfigurationManager.getInstance().setPortalConnectedTextures(newValue)
 			)
 		);
 
 		this.optionsRowList.addSmall(
-			new CustomBooleanOption(
+			new CosmosOptionBoolean(
 				CosmosColour.LIGHT_BLUE, false, "cosmosportals.gui.config.labels", TYPE.ON_OFF,
-				(options) -> CoreConfigurationManager.getInstance().getRenderPortalLabels(),
-				(options, newValue) -> CoreConfigurationManager.getInstance().setRenderPortalLabels(newValue)
+				(options) -> ConfigurationManager.getInstance().getRenderPortalLabels(),
+				(options, newValue) -> ConfigurationManager.getInstance().setRenderPortalLabels(newValue)
 			),
-			new CustomBooleanOption(
+			new CosmosOptionBoolean(
 				CosmosColour.LIGHT_BLUE, false, "cosmosportals.gui.config.particles", TYPE.ON_OFF,
-				(options) -> CoreConfigurationManager.getInstance().getRenderPortalParticleEffects(),
-				(options, newValue) -> CoreConfigurationManager.getInstance().setRenderPortalParticleEffects(newValue)
+				(options) -> ConfigurationManager.getInstance().getRenderPortalParticleEffects(),
+				(options, newValue) -> ConfigurationManager.getInstance().setRenderPortalParticleEffects(newValue)
 			)
 		);
 		
-		this.children.add(this.optionsRowList);
+		this.addWidget(this.optionsRowList);
 		
-		this.addButton(
-			new Button(
-				(this.width - BUTTON_WIDTH) /2, this.height - DONE_BUTTON_TOP_OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT,
-				CosmosCompHelper.locComp(CosmosColour.GREEN, true, "cosmosportals.gui.done"), (button) -> { this.onClose(); }
-			)
-		);
+		this.addRenderableWidget(new Button(
+			(this.width - BUTTON_WIDTH) /2, this.height - DONE_BUTTON_TOP_OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT,
+			CosmosCompHelper.locComp(CosmosColour.GREEN, true, "cosmosportals.gui.done"), (button) -> { this.onClose(); }
+		));
 	}
 	
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float ticks) {
+	public void render(PoseStack matrixStack, int mouseX, int mouseY, float ticks) {
 		this.renderBackground(matrixStack);
 		
 		this.optionsRowList.render(matrixStack, mouseX, mouseY, ticks);
@@ -147,16 +153,17 @@ public final class ScreenConfiguration extends Screen {
 	}
 	
 	@Override
-	public void renderComponentHoverEffect(MatrixStack matrixStack, Style style, int mouseX, int mouseY) {
+	public void renderComponentHoverEffect(PoseStack matrixStack, Style style, int mouseX, int mouseY) {
 		if (mouseY > this.OPTIONS_LIST_TOP_HEIGHT && mouseY < this.height - this.OPTIONS_LIST_BOTTOM_OFFSET) {
 			if (this.optionsRowList.children().get(0) != null) {
 				for (int i = 0; i < this.optionsRowList.children().size(); i++) {
-						if (!(i == 0) && !(i == 3) && !(i == 5)) {
-						Row testRow = this.optionsRowList.children().get(i);
+					if (!(i == 0) && !(i == 3) && !(i == 5)) {
+						
+						Entry testRow = this.optionsRowList.children().get(i);
 						
 						if (testRow.children().size() > 1) {
-							IGuiEventListener left = testRow.children().get(0);
-							IGuiEventListener right = testRow.children().get(1);
+							GuiEventListener left = testRow.children().get(0);
+							GuiEventListener right = testRow.children().get(1);
 							
 							if (left.isMouseOver(mouseX, mouseY)) {
 								this.renderComponentTooltip(matrixStack, Arrays.asList(this.getTooltipForChild((double) i + 0.3D)), mouseX, mouseY + 30);
@@ -166,7 +173,7 @@ public final class ScreenConfiguration extends Screen {
 							
 						} else {
 							if (testRow.getChildAt(mouseX, mouseY).isPresent()) {
-								IGuiEventListener list = testRow.getChildAt(mouseX, mouseY).get();
+								GuiEventListener list = testRow.getChildAt(mouseX, mouseY).get();
 								
 								if (list.isMouseOver(mouseX, mouseY)) {
 									this.renderComponentTooltip(matrixStack, Arrays.asList(this.getTooltipForChild(i)), mouseX, mouseY + 30);
@@ -180,38 +187,48 @@ public final class ScreenConfiguration extends Screen {
 		super.renderComponentHoverEffect(matrixStack, style, mouseX, mouseY);
 	}
 	
-	public IFormattableTextComponent[] getTooltipForChild(double index) {
+	public BaseComponent[] getTooltipForChild(double index) {
 		CosmosColour desc = CosmosColour.LIGHT_GRAY;
 		
 		if (index == 1.0D) {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.size_info"),
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.size_info"),
 					CosmosCompHelper.locComp(CosmosColour.RED, false, "cosmosportals.gui.config.size_info_two"),
 					CosmosCompHelper.locComp(CosmosColour.LIGHT_RED, false, "cosmosportals.gui.config.size_info_three")};
 		} else if (index == 2.3D) {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.sound.travel_info")};
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.sound.travel_info")};
 		} else if (index == 2.6D) {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.sound.ambient_info")};
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.sound.ambient_info")};
 		} else if (index == 4.3D) {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.message.info_desc")};
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.message.info_desc")};
 		} else if (index == 4.6D) {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.message.debug_desc")};
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.message.debug_desc")};
 		} else if (index == 6.3D) {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.frame_textures_info")};
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.frame_textures_info")};
 		} else if (index == 6.6D) {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.portal_textures_info")};
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.portal_textures_info")};
 		} else if (index == 7.3D) {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.labels_info")};
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.labels_info")};
 		} else if (index == 7.6D) {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.particles_info")};
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.particles_info")};
 		} else {
-			return new IFormattableTextComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.missing")};
+			return new BaseComponent[] {CosmosCompHelper.locComp(desc, false, "cosmosportals.gui.config.missing")};
 		}
+	}
+	
+	@Override
+	public boolean handleComponentClicked(@Nullable Style styleIn) {
+		return super.handleComponentClicked(styleIn);
+	}
+	
+	@Override
+	public boolean keyPressed(int mouseX, int mouseY, int ticks) {
+		return super.keyPressed(mouseX, mouseY, ticks);
 	}
 	
     @Override
     public void onClose() {
     	this.minecraft.setScreen(parent);
     	
-        CoreConfigurationManager.save();
+        ConfigurationManager.save();
     }
 }

@@ -11,29 +11,29 @@ import com.tcn.cosmoslibrary.common.comp.CosmosColour;
 import com.tcn.cosmoslibrary.common.comp.CosmosCompHelper;
 import com.tcn.cosmoslibrary.common.comp.CosmosCompHelper.Value;
 import com.tcn.cosmoslibrary.common.item.CosmosItem;
-import com.tcn.cosmosportals.core.management.CoreEventFactory;
-import com.tcn.cosmosportals.core.tileentity.TileEntityPortalDock;
+import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDock;
+import com.tcn.cosmosportals.core.management.EventFactory;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 @SuppressWarnings("deprecation")
 public class ItemPortalContainer extends CosmosItem {
@@ -44,7 +44,7 @@ public class ItemPortalContainer extends CosmosItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stackIn, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stackIn, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (!CosmosCompHelper.isShiftKeyDown(Minecraft.getInstance())) {
 			tooltip.add(CosmosCompHelper.getTooltipInfo("cosmosportals.item_info.container"));
 			
@@ -59,13 +59,13 @@ public class ItemPortalContainer extends CosmosItem {
 			tooltip.add(CosmosCompHelper.shiftForLessDetails());
 			
 			if (stackIn.hasTag()) {
-				CompoundNBT stack_tag = stackIn.getTag();
+				CompoundTag stack_tag = stackIn.getTag();
 				
 				if (stack_tag.contains("nbt_data")) {
-					CompoundNBT nbt_data = stack_tag.getCompound("nbt_data");
+					CompoundTag nbt_data = stack_tag.getCompound("nbt_data");
 					
 					if (nbt_data.contains("position_data")) {
-						CompoundNBT position_data = nbt_data.getCompound("position_data");
+						CompoundTag position_data = nbt_data.getCompound("position_data");
 						
 						int[] position = new int [] { position_data.getInt("pos_x"), position_data.getInt("pos_y"), position_data.getInt("pos_z") };
 						
@@ -74,7 +74,7 @@ public class ItemPortalContainer extends CosmosItem {
 					}
 
 					if (nbt_data.contains("dimension_data")) {
-						CompoundNBT dimension_data = nbt_data.getCompound("dimension_data");
+						CompoundTag dimension_data = nbt_data.getCompound("dimension_data");
 						
 						String namespace = dimension_data.getString("namespace");
 						String path = dimension_data.getString("path");
@@ -89,47 +89,47 @@ public class ItemPortalContainer extends CosmosItem {
 	}
 	
 	@Override
-	public boolean canAttackBlock(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+	public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
 		return false;
 	}
 	
 	@Override
-	public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
+	public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
 		return true;
 	}
 	
 	@Override
-	public ActionResultType onItemUseFirst(ItemStack stackIn, ItemUseContext context) {
-		PlayerEntity playerIn = context.getPlayer();
+	public InteractionResult onItemUseFirst(ItemStack stackIn, UseOnContext context) {
+		Player playerIn = context.getPlayer();
 		BlockPos pos = context.getClickedPos();
-		World world = context.getLevel();
-		TileEntity entity = world.getBlockEntity(pos);
+		Level level = context.getLevel();
+		BlockEntity entity = level.getBlockEntity(pos);
 		
 		if (entity != null) {
-			if (entity instanceof TileEntityPortalDock) {
+			if (entity instanceof BlockEntityPortalDock) {
 				playerIn.swing(context.getHand());
-				return ActionResultType.PASS;
+				return InteractionResult.PASS;
 			}
 		}
 		
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 	
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		ItemStack stack = playerIn.getItemInHand(handIn);
 		BlockPos player_pos = playerIn.blockPosition();
-		RegistryKey<World> dim = worldIn.dimension();
+		ResourceKey<Level> dim = worldIn.dimension();
 		ResourceLocation destDimension = dim.location();
 		Biome biome = worldIn.getBiome(player_pos);
 		
 		if (playerIn.isShiftKeyDown()) {
 			if (!stack.hasTag()) {
-				if (CoreEventFactory.onContainerLink(playerIn, player_pos, player_pos, destDimension)) {
-					CompoundNBT stack_tag = new CompoundNBT();
-					CompoundNBT nbt_data = new CompoundNBT();
-					CompoundNBT dimension_data = new CompoundNBT();
-					CompoundNBT position_data = new CompoundNBT();
+				if (EventFactory.onContainerLink(playerIn, player_pos, player_pos, destDimension)) {
+					CompoundTag stack_tag = new CompoundTag();
+					CompoundTag nbt_data = new CompoundTag();
+					CompoundTag dimension_data = new CompoundTag();
+					CompoundTag position_data = new CompoundTag();
 					
 					dimension_data.putString("namespace", dim.location().getNamespace());
 					dimension_data.putString("path", dim.location().getPath());
@@ -164,9 +164,9 @@ public class ItemPortalContainer extends CosmosItem {
 		
 					playerIn.swing(handIn);
 					
-					IFormattableTextComponent preName = new StringTextComponent(stack.getHoverName().getString());
+					BaseComponent preName = new TextComponent(stack.getHoverName().getString());
 					String human_name = WordUtils.capitalizeFully(destDimension.getPath().replace("_", " "));
-					IFormattableTextComponent newName = CosmosCompHelper.locComp(colour, false, " [" + human_name + "]");
+					BaseComponent newName = CosmosCompHelper.locComp(colour, false, " [" + human_name + "]");
 					
 					stack.setHoverName(preName.append(newName));
 					
@@ -174,6 +174,6 @@ public class ItemPortalContainer extends CosmosItem {
 				}
 			}
 		}
-		return ActionResult.pass(playerIn.getItemInHand(handIn));
+		return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
 	}
 }

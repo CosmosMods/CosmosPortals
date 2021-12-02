@@ -1,9 +1,10 @@
 package com.tcn.cosmosportals;
 
-import com.tcn.cosmosportals.core.management.CoreConfigurationManager;
-import com.tcn.cosmosportals.core.management.CoreEventManager;
-import com.tcn.cosmosportals.core.management.CoreModBusManager;
-import com.tcn.cosmosportals.core.management.CoreNetworkManager;
+import com.tcn.cosmoslibrary.management.CosmosConsoleManager;
+import com.tcn.cosmosportals.core.management.ConfigurationManager;
+import com.tcn.cosmosportals.core.management.EventManager;
+import com.tcn.cosmosportals.core.management.ModBusManager;
+import com.tcn.cosmosportals.core.management.NetworkManager;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -19,26 +20,28 @@ public class CosmosPortals {
 	//This must NEVER EVER CHANGE!
 	public static final String MOD_ID = "cosmosportals";
 
+	public static final CosmosConsoleManager CONSOLE = new CosmosConsoleManager(CosmosPortals.MOD_ID);
+
 	public CosmosPortals() {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onFMLCommonSetup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onFMLClientSetup);
 		MinecraftForge.EVENT_BUS.register(this);
 		
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CoreConfigurationManager.spec, "cosmos-portals-common.toml");
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigurationManager.spec, "cosmos-portals-common.toml");
 	}
 
 	public void onFMLCommonSetup(final FMLCommonSetupEvent event) {
-		CoreEventManager.registerOresForGeneration();
+		EventManager.registerOresForGeneration();
 		
-		CoreNetworkManager.register();
+		NetworkManager.register();
 		
-		//CoreConsoleManager.message(LEVEL.STARTUP, "FMLCommonSetup complete.");
+		CONSOLE.startup("FMLCommonSetup complete.");
 	}
 
 	public void onFMLClientSetup(final FMLClientSetupEvent event) {
 		final ModLoadingContext context = ModLoadingContext.get();
 		
-		CoreModBusManager.registerClient(context);
-		CoreModBusManager.onFMLClientSetup(event);
+		ModBusManager.registerClient(context);
+		ModBusManager.onFMLClientSetup(event);
 	}
 }

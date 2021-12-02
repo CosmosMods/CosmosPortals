@@ -1,0 +1,32 @@
+{
+	"parent": "cosmosportals:ingots",
+	"display": {
+		"icon": {
+			"item": "cosmosportals:item_dimension_container"
+		},
+		"title": "Containing Dimensions!",
+		"description": "Obtain a Dimension Container.",
+		"background": "cosmosportals:textures/gui/advancements/backgrounds/material.png",
+		"frame": "goal",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"container": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "cosmosportals:item_dimension_container"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"container"
+		]
+	]
+}

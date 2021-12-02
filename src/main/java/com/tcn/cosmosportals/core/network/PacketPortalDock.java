@@ -2,21 +2,21 @@ package com.tcn.cosmosportals.core.network;
 
 import java.util.function.Supplier;
 
-import com.tcn.cosmosportals.core.management.CoreConsole;
-import com.tcn.cosmosportals.core.tileentity.TileEntityPortalDock;
+import com.tcn.cosmosportals.CosmosPortals;
+import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDock;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class PacketPortalDock  {
 	
 	private BlockPos pos;
 	private Integer id;
 	
-	public PacketPortalDock(PacketBuffer buf) {
+	public PacketPortalDock(FriendlyByteBuf buf) {
 		this.pos = buf.readBlockPos();
 		this.id = buf.readInt();
 	}
@@ -26,7 +26,7 @@ public class PacketPortalDock  {
 		this.id = id;
 	}
 	
-	public static void encode(PacketPortalDock packet, PacketBuffer buf) {
+	public static void encode(PacketPortalDock packet, FriendlyByteBuf buf) {
 		buf.writeBlockPos(packet.pos);
 		buf.writeInt(packet.id);
 	}
@@ -35,11 +35,11 @@ public class PacketPortalDock  {
 		NetworkEvent.Context ctx = context.get();
 		
 		ctx.enqueueWork(() -> {
-			ServerWorld world = ctx.getSender().getLevel();
-			TileEntity tile = world.getBlockEntity(packet.pos);
+			ServerLevel world = ctx.getSender().getLevel();
+			BlockEntity tile = world.getBlockEntity(packet.pos);
 			
-			if (tile instanceof TileEntityPortalDock) {
-				TileEntityPortalDock tileDock = (TileEntityPortalDock) tile;
+			if (tile instanceof BlockEntityPortalDock) {
+				BlockEntityPortalDock tileDock = (BlockEntityPortalDock) tile;
 			
 				if (packet.id == 0) {
 					tileDock.toggleRenderLabel();
@@ -50,10 +50,10 @@ public class PacketPortalDock  {
 				} else if (packet.id == 3) {
 					tileDock.toggleParticles();
 				} else {
-					CoreConsole.warning("[FAIL] Id not recognised.");
+					CosmosPortals.CONSOLE.warning("[FAIL] Id not recognised.");
 				}
 			} else {
-				CoreConsole.warning("[FAIL] TileEntity not instanceof!");
+				CosmosPortals.CONSOLE.warning("[FAIL] TileEntity not instanceof!");
 			}
 			
 		});

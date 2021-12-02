@@ -6,43 +6,38 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.tcn.cosmoslibrary.common.block.CosmosBlockUnbreakable;
-import com.tcn.cosmoslibrary.common.interfaces.IItemGroupNone;
-import com.tcn.cosmosportals.core.management.CoreConfigurationManager;
-import com.tcn.cosmosportals.core.management.CoreModBusManager;
-import com.tcn.cosmosportals.core.portal.CustomPortalSize;
-import com.tcn.cosmosportals.core.tileentity.TileEntityPortal;
+import com.tcn.cosmoslibrary.common.interfaces.IBlankCreativeTab;
+import com.tcn.cosmosportals.core.blockentity.BlockEntityPortal;
+import com.tcn.cosmosportals.core.management.ConfigurationManager;
+import com.tcn.cosmosportals.core.portal.CustomPortalShape;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class BlockPortal extends CosmosBlockUnbreakable implements IItemGroupNone {
+public class BlockPortal extends CosmosBlockUnbreakable implements EntityBlock, IBlankCreativeTab {
 	
 	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	protected static final VoxelShape X_AXIS_AABB = Block.box(0.0D, 0.0D, 6.0D, 16.0D, 16.0D, 10.0D);
@@ -59,33 +54,21 @@ public class BlockPortal extends CosmosBlockUnbreakable implements IItemGroupNon
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader worldIn) {
-		return CoreModBusManager.PORTAL_TILE_TYPE.create();
+	public BlockEntity newBlockEntity(BlockPos posIn, BlockState stateIn) {
+		return new BlockEntityPortal(posIn, stateIn);
 	}
 	
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public void randomTick(BlockState stateIn, ServerWorld worldIn, BlockPos posIn, Random random) {
+	public void randomTick(BlockState stateIn, ServerLevel worldIn, BlockPos posIn, Random random) {
 		if (worldIn.dimensionType().natural() && worldIn.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) && random.nextInt(2000) < worldIn.getDifficulty().getId()) {
 			while (worldIn.getBlockState(posIn).is(this)) {
 				posIn = posIn.below();
-			}
-
-			if (worldIn.getBlockState(posIn).isValidSpawn(worldIn, posIn, EntityType.ZOMBIFIED_PIGLIN)) {
-				Entity entity = EntityType.ZOMBIFIED_PIGLIN.spawn(worldIn, (CompoundNBT) null, (ITextComponent) null, (PlayerEntity) null, posIn.above(), SpawnReason.STRUCTURE, false, false);
-				if (entity != null) {
-					entity.setPortalCooldown();
-				}
 			}
 		}
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState stateIn, IBlockReader worldIn, BlockPos posIn, ISelectionContext context) {
+	public VoxelShape getShape(BlockState stateIn, BlockGetter worldIn, BlockPos posIn, CollisionContext context) {
 		switch ((Direction.Axis) stateIn.getValue(AXIS)) {
 		case Z:
 			return Z_AXIS_AABB;
@@ -96,19 +79,19 @@ public class BlockPortal extends CosmosBlockUnbreakable implements IItemGroupNon
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction directionIn, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState stateIn, Direction directionIn, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
 		Direction.Axis direction$axis = directionIn.getAxis();
 		Direction.Axis direction$axis1 = stateIn.getValue(AXIS);
 		boolean flag = direction$axis1 != direction$axis && direction$axis.isHorizontal();
 		
-		return !flag && !facingState.is(this) && !(new CustomPortalSize(worldIn, currentPos, direction$axis1)).isComplete() ? Blocks.AIR.defaultBlockState() : 
+		return !flag && !facingState.is(this) && !(new CustomPortalShape(worldIn, currentPos, direction$axis1)).isComplete() ? Blocks.AIR.defaultBlockState() : 
 			stateIn.setValue(UP, this.canSideConnect(worldIn, currentPos, Direction.UP, null))
 				.setValue(DOWN, this.canSideConnect(worldIn, currentPos, Direction.DOWN, null))
 				.setValue(LEFT, this.canSideConnect(worldIn, currentPos, null, "left"))
 				.setValue(RIGHT, this.canSideConnect(worldIn, currentPos, null, "right"));
 	}
 
-	public BlockState updateState(BlockState stateIn, BlockPos currentPos, World worldIn) {
+	public BlockState updateState(BlockState stateIn, BlockPos currentPos, Level worldIn) {
 		return stateIn.setValue(UP, this.canSideConnect(worldIn, currentPos, Direction.UP, null))
 				.setValue(DOWN, this.canSideConnect(worldIn, currentPos, Direction.DOWN, null))
 				.setValue(LEFT, this.canSideConnect(worldIn, currentPos, null, "left"))
@@ -116,28 +99,23 @@ public class BlockPortal extends CosmosBlockUnbreakable implements IItemGroupNon
 	}
 	
 	@Override
-	public void entityInside(BlockState stateIn, World worldIn, BlockPos posIn, Entity entityIn) {
+	public void entityInside(BlockState stateIn, Level worldIn, BlockPos posIn, Entity entityIn) {
 		if (!worldIn.isClientSide) {
-			TileEntity tile = worldIn.getBlockEntity(posIn);
+			BlockEntity tile = worldIn.getBlockEntity(posIn);
 			
-			if (tile != null && tile instanceof TileEntityPortal) {
-				((TileEntityPortal) tile).entityInside(stateIn, worldIn, posIn, entityIn);
+			if (tile != null && tile instanceof BlockEntityPortal) {
+				((BlockEntityPortal) tile).entityInside(stateIn, worldIn, posIn, entityIn);
 			}
 		}
 	}
-
-	@Override
-	public boolean canBeReplacedByLeaves(BlockState state, IWorldReader world, BlockPos pos) {
-        return false;
-    }
 	
 	@Override
-	public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
+	public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
         return false;
     }
 
 	@Override
-	public ItemStack getCloneItemStack(IBlockReader blockReader, BlockPos posIn, BlockState stateIn) {
+	public ItemStack getCloneItemStack(BlockGetter blockReader, BlockPos posIn, BlockState stateIn) {
 		return ItemStack.EMPTY;
 	}
 
@@ -160,23 +138,23 @@ public class BlockPortal extends CosmosBlockUnbreakable implements IItemGroupNon
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(AXIS, DOWN, UP, LEFT, RIGHT);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, World worldIn, BlockPos posIn, Random randIn) {
-		TileEntity tile = worldIn.getBlockEntity(posIn);
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos posIn, Random randIn) {
+		BlockEntity tile = worldIn.getBlockEntity(posIn);
 		
-		if (tile instanceof TileEntityPortal) {
-			((TileEntityPortal) tile).animateTick(stateIn, worldIn, posIn, randIn);
+		if (tile instanceof BlockEntityPortal) {
+			((BlockEntityPortal) tile).animateTick(stateIn, worldIn, posIn, randIn);
 		}
 	}
 
-	private boolean canSideConnect(IWorld world, BlockPos pos, @Nullable Direction facing, @Nullable String leftRight) {
+	private boolean canSideConnect(LevelAccessor world, BlockPos pos, @Nullable Direction facing, @Nullable String leftRight) {
 		final BlockState blockState = world.getBlockState(pos);
 		
-		if (CoreConfigurationManager.getInstance().getPortalConnectedTextures()) {
+		if (ConfigurationManager.getInstance().getPortalConnectedTextures()) {
 			if (facing != null) {
 				final BlockState otherState = world.getBlockState(pos.offset(facing.getNormal()));
 				
@@ -209,8 +187,7 @@ public class BlockPortal extends CosmosBlockUnbreakable implements IItemGroupNon
 		return false;
 	}
 	
-	protected boolean canConnect(@Nonnull BlockState orig, @Nonnull BlockState conn) {
+	private boolean canConnect(@Nonnull BlockState orig, @Nonnull BlockState conn) {
 		return orig.getBlock() == conn.getBlock();
 	}
-	
 }
