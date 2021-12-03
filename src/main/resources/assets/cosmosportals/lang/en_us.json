@@ -63,6 +63,8 @@
 	"cosmosportals.gui.config.particles": "Portal Particles",
 	"cosmosportals.gui.config.particles_info": "Whether or not Portal Particle Effects are rendered",
 	
+	"cosmosportals.gui.config.message.restart": "A restart is required for this option to take effect",
+	
 	"cosmosportals.gui.done": "Done",
 	
 	"cosmosportals.gui.dock": "Portal Dock",
@@ -79,8 +81,6 @@
 	
 	"cosmosportals.gui.dock.entity_info": "Allow all Entities to pass, or only Players.",
 	"cosmosportals.gui.dock.entity_value": "Entities allowed:",
-	"cosmosportals.gui.dock.entity_all": "All Enities",
-	"cosmosportals.gui.dock.entity_player": "Players Only",
 	
 	"cosmosportals.gui.dock.particle_info": "Show or Hide Particle Effects.",
 	"cosmosportals.gui.dock.particle_value": "Particle Effects are currently:",

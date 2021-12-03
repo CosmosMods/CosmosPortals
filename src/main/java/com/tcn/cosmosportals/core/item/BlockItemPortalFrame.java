@@ -6,12 +6,12 @@ import javax.annotation.Nullable;
 
 import com.tcn.cosmoslibrary.common.comp.CosmosCompHelper;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 
 public class BlockItemPortalFrame extends BlockItem {
 
@@ -20,7 +20,7 @@ public class BlockItemPortalFrame extends BlockItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stackIn, @Nullable World worldIn, List<ITextComponent> toolTipIn, ITooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stackIn, @Nullable Level worldIn, List<Component> toolTipIn, TooltipFlag flagIn) {
 		super.appendHoverText(stackIn, worldIn, toolTipIn, flagIn);
 		
 		toolTipIn.add(CosmosCompHelper.getTooltipInfo("cosmosportals.block_info.frame"));

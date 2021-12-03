@@ -1,0 +1,32 @@
+{
+	"parent": "cosmosportals:root",
+	"display": {
+		"icon": {
+			"item": "cosmosportals:item_cosmic_material"
+		},
+		"title": "Cosmic Material!",
+		"description": "Mine some Cosmic Ore.",
+		"background": "cosmosportals:textures/gui/advancements/backgrounds/material.png",
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"materials": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "cosmosportals:item_cosmic_material"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"materials"
+		]
+	]
+}

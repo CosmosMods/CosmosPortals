@@ -2,5 +2,13 @@
 	"portal_travel": { 
 	   "category" : "block", 
 	   "sounds": [ "cosmosportals:portal_travel" ]
+    },
+    "portal_create": { 
+	   "category" : "block", 
+	   "sounds": [ "cosmosportals:portal_create" ]
+    },
+    "portal_destroy": { 
+	   "category" : "block", 
+	   "sounds": [ "cosmosportals:portal_destroy" ]
     }
 }

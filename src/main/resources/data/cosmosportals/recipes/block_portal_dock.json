@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"C": {
-			"item": "cosmosportals:block_cosmic"
+			"item": "cosmosportals:block_portal_frame"
 		},
 		"P": {
 			"item": "cosmosportals:item_cosmic_pearl"
