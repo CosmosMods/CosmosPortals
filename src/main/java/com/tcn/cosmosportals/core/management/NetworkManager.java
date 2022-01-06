@@ -1,13 +1,14 @@
 package com.tcn.cosmosportals.core.management;
 
 import com.tcn.cosmosportals.CosmosPortals;
+import com.tcn.cosmosportals.core.network.PacketGuideUpdate;
 import com.tcn.cosmosportals.core.network.PacketPortalDock;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
-public class CoreNetworkManager {
+public class NetworkManager {
 
 	private static final String PROTOCOL_VERSION = "1";
 	public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
@@ -17,8 +18,9 @@ public class CoreNetworkManager {
 	
 	public static void register() {
 		INSTANCE.registerMessage(0, PacketPortalDock.class, PacketPortalDock::encode, PacketPortalDock::new, PacketPortalDock::handle);
+		INSTANCE.registerMessage(1, PacketGuideUpdate.class, PacketGuideUpdate::encode, PacketGuideUpdate::new, PacketGuideUpdate::handle);
 
-		CoreConsole.info("Packets Registered");
+		CosmosPortals.CONSOLE.info("CosmosPortals Network Setup complete.");
 	}
 
 	public static void sendToServer(Object message) {

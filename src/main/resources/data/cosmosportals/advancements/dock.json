@@ -1,0 +1,38 @@
+{
+	"parent": "cosmosportals:ingots",
+	"display": {
+		"icon": {
+			"item": "cosmosportals:block_portal_dock"
+		},
+		"title": {
+			"translate": "cosmosportals.advancements.dock.title"
+		},
+		"description": {
+			"translate": "cosmosportals.advancements.dock.desc"
+		},
+		"background": "cosmosportals:textures/gui/advancements/backgrounds/material.png",
+		"frame": "challenge",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"dock": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"cosmosportals:block_portal_dock"
+						]
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"dock"
+		]
+	]
+}

@@ -4,229 +4,267 @@ import java.util.Arrays;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.tcn.cosmoslibrary.client.screen.button.CosmosButtonCustom;
-import com.tcn.cosmoslibrary.client.screen.button.CosmosButtonCustom.TYPE;
-import com.tcn.cosmoslibrary.client.util.ScreenUtil;
-import com.tcn.cosmoslibrary.client.util.ScreenUtil.DRAW;
-import com.tcn.cosmoslibrary.common.comp.CosmosColour;
-import com.tcn.cosmoslibrary.common.comp.CosmosCompHelper;
-import com.tcn.cosmosportals.CosmosPortals;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.tcn.cosmoslibrary.client.ui.lib.CosmosUISystem;
+import com.tcn.cosmoslibrary.client.ui.screen.CosmosScreenUIMode;
+import com.tcn.cosmoslibrary.client.ui.screen.widget.CosmosButtonWithType;
+import com.tcn.cosmoslibrary.client.ui.screen.widget.CosmosButtonWithType.TYPE;
+import com.tcn.cosmoslibrary.common.lib.ComponentColour;
+import com.tcn.cosmoslibrary.common.lib.ComponentHelper;
 import com.tcn.cosmosportals.CosmosPortalsReference;
 import com.tcn.cosmosportals.client.container.ContainerPortalDock;
-import com.tcn.cosmosportals.core.management.CoreNetworkManager;
+import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDock;
+import com.tcn.cosmosportals.core.management.NetworkManager;
 import com.tcn.cosmosportals.core.network.PacketPortalDock;
-import com.tcn.cosmosportals.core.tileentity.TileEntityPortalDock;
 
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-@SuppressWarnings({ "unused", "deprecation" })
-public class ScreenPortalDock extends ContainerScreen<ContainerPortalDock> {
+@SuppressWarnings({ "deprecation" })
+public class ScreenPortalDock extends CosmosScreenUIMode<ContainerPortalDock> {
 	
-	private CosmosButtonCustom toggleLabelButton;     private int[] indexL = new int[] { 17, 140, 18 };
-	private CosmosButtonCustom toggleSoundButton;     private int[] indexS = new int[] { 47, 140, 18 };
-	private CosmosButtonCustom toggleEntityButton; 	  private int[] indexE = new int[] { 115,  140, 18 };
-	private CosmosButtonCustom toggleParticlesButton; private int[] indexP = new int[] { 145,  140, 18 };
+	private CosmosButtonWithType toggleLabelButton;     private int[] indexL = new int[] { 16,   139, 20 };
+	private CosmosButtonWithType toggleSoundButton;     private int[] indexS = new int[] { 46,   139, 20 };
+	private CosmosButtonWithType toggleEntityButton; 	private int[] indexE = new int[] { 114,  139, 20 };
+	private CosmosButtonWithType toggleParticlesButton; private int[] indexP = new int[] { 144,  139, 20 };
+	
+	//private CosmosButtonWithType reformPortalButton;    private int[] indexR = new int[] { 16,  109, 20 };
 
-	public ScreenPortalDock(ContainerPortalDock containerIn, PlayerInventory playerInventoryIn, ITextComponent titleIn) {
+	public ScreenPortalDock(ContainerPortalDock containerIn, Inventory playerInventoryIn, Component titleIn) {
 		super(containerIn, playerInventoryIn, titleIn);
 
-		this.imageWidth = 180;
-		this.imageHeight = 256;
+		this.setImageDims(191, 256);
+
+		this.setLight(CosmosPortalsReference.DOCK[0]);
+		this.setDark(CosmosPortalsReference.DOCK[1]);
+
+		this.setUIModeButtonIndex(175, 4);
+		this.setUIHelpButtonIndex(175, 17);
+		this.setUIHelpElementDeadzone(144, 109, 163, 128);
+		this.setUIHelpTitleOffset(4);
+		
+		this.setInventoryLabelDims(9, 166);
+		this.setNoTitleLabel();
 	}
 
 	@Override
 	protected void init() {
-		int[] screen_coords = ScreenUtil.INIT.getScreenCoords(this, this.imageWidth, this.imageHeight);
-		
-		this.drawButtons(screen_coords);
-		
 		super.init();
-		this.titleLabelX = 50;
 	}
 
 	@Override
-	public void render(MatrixStack matrixStackIn, int mouseX, int mouseY, float partialTicks) {
-		int[] screen_coords = ScreenUtil.INIT.getScreenCoords(this, this.imageWidth, this.imageHeight);
+	public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+		super.render(poseStack, mouseX, mouseY, partialTicks);
 		
-		this.renderBackground(matrixStackIn);
-		super.render(matrixStackIn, mouseX, mouseY, partialTicks);
-		this.drawButtons(screen_coords);
-		
-		ContainerPortalDock container = this.menu;
-		World world = container.getWorld();
-		BlockPos pos = container.getBlockPos();
-		TileEntity tile = world.getBlockEntity(pos);
-		
-		if (tile instanceof TileEntityPortalDock) {
-			TileEntityPortalDock tileEntity = (TileEntityPortalDock) tile;
-			
-			if (tileEntity.isPortalFormed && tileEntity.renderLabel) {
-				String human_name = WordUtils.capitalizeFully(tileEntity.destDimension.getPath().replace("_", " "));
-				int portalColour = tileEntity.getDisplayColour();
-				
-				drawCenteredString(matrixStackIn, font, human_name, screen_coords[0] + this.imageWidth / 2, screen_coords[1] + 119, portalColour);
-			}
-		}
-		
-		this.renderComponentHoverEffect(matrixStackIn, Style.EMPTY, mouseX, mouseY);
-		this.renderTooltip(matrixStackIn, mouseX, mouseY);
+		this.renderPortalLabel(poseStack);
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrixStackIn, float partialTicks, int mouseX, int mouseY) {
-		int[] screen_coords = ScreenUtil.INIT.getScreenCoords(this, this.imageWidth, this.imageHeight);
-		
-		ContainerPortalDock container = this.menu;
-		World world = container.getWorld();
-		BlockPos pos = container.getBlockPos();
-		TileEntity tile = world.getBlockEntity(pos);
-		
-		DRAW.drawStaticElement(this, matrixStackIn, screen_coords, 0, 0, 0, 0, this.imageWidth, this.imageHeight, CosmosPortalsReference.DOCK_BACKGROUND);
-		
-		if (tile instanceof TileEntityPortalDock) {
-			TileEntityPortalDock tileEntity = (TileEntityPortalDock) tile;
+	protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+		super.renderBg(poseStack, partialTicks, mouseX, mouseY);
 
-			int portalColour = tileEntity.getDisplayColour();
-			float frame[] = CosmosColour.rgbFloatArray(CosmosColour.GRAY);
-			float[] colour = new float[] {((portalColour >> 16) & 255) / 255.0F, ((portalColour >> 8) & 255) / 255.0F, (portalColour & 255) / 255.0F, 1.0F};
+		BlockEntity entity = this.getBlockEntity();
+		
+		if (entity instanceof BlockEntityPortalDock) {
+			BlockEntityPortalDock blockEntity = (BlockEntityPortalDock) entity;
+
+			int portalColour = blockEntity.getDisplayColour();
+			float frame[] = ComponentColour.rgbFloatArray(ComponentColour.GRAY);
+			float[] colour = new float[] {((portalColour >> 16) & 255) / 255.0F, ((portalColour >> 8) & 255) / 255.0F, (portalColour & 255) / 255.0F, 1F};
 			
-			DRAW.drawStaticElement(this, matrixStackIn, screen_coords, 0, 0, 0, 0, this.imageWidth, this.imageHeight, new float[] { frame[0], frame[1], frame[2], 1.0F }, CosmosPortalsReference.DOCK_FRAME);
+			CosmosUISystem.renderStaticElement(this, poseStack, this.getScreenCoords(), 0, 0, 0, 0, this.imageWidth, this.imageHeight, new float[] { frame[0], frame[1], frame[2], 1.0F }, CosmosPortalsReference.DOCK_FRAME);
+			CosmosUISystem.renderStaticElement(this, poseStack, this.getScreenCoords(), 0, 0, 0, 0, this.imageWidth, this.imageHeight, CosmosPortalsReference.DOCK_BACKING);
 			
-			if (tileEntity.isPortalFormed) {
-				DRAW.drawStaticElement(this, matrixStackIn, screen_coords, 0, 0, 0, 0, this.imageWidth, this.imageHeight, colour, CosmosPortalsReference.DOCK_PORTAL);
+			if (blockEntity.isPortalFormed) {
+				RenderSystem.enableBlend();
+				CosmosUISystem.renderStaticElement(this, poseStack, this.getScreenCoords(), 0, 0, 0, 0, this.imageWidth, this.imageHeight, colour, CosmosPortalsReference.DOCK_PORTAL);
+				RenderSystem.disableBlend();
 			}
 			
-			DRAW.drawStaticElement(this, matrixStackIn, screen_coords, 0, 0, 0, 0, this.imageWidth, this.imageHeight, colour, CosmosPortalsReference.DOCK_CONTAINER);
-			DRAW.drawStaticElement(this, matrixStackIn, screen_coords, 0, 0, 0, 0, this.imageWidth, this.imageHeight, new float[] { 1.0F, 1.0F, 1.0F, 1.0F }, CosmosPortalsReference.DOCK_SLOTS);
+			CosmosUISystem.renderStaticElement(this, poseStack, this.getScreenCoords(), 0, 0, 0, 0, this.imageWidth, this.imageHeight, colour, CosmosPortalsReference.DOCK_CONTAINER);
+			CosmosUISystem.renderStaticElementWithUIMode(this, poseStack, this.getScreenCoords(), 0, 0, 0, 0, this.imageWidth, this.imageHeight, new float[] { 1.0F, 1.0F, 1.0F, 1.0F }, blockEntity, CosmosPortalsReference.DOCK_SLOTS);
 			
-			if (tileEntity.isPortalFormed && tileEntity.renderLabel) {
-				String human_name = WordUtils.capitalizeFully(tileEntity.destDimension.getPath().replace("_", " "));
+			if (blockEntity.isPortalFormed && blockEntity.renderLabel) {
+				String human_name = WordUtils.capitalizeFully(blockEntity.destDimension.getPath().replace("_", " "));
 				int width = this.font.width(human_name) + 2;
 				
-				DRAW.drawStaticElement(this, matrixStackIn, screen_coords, this.imageWidth / 2 - width / 2, 117, 0, 0, width, 12, new float[] { 1.0F, 1.0F, 1.0F, 0.6F }, CosmosPortalsReference.DOCK_LABEL);
+				CosmosUISystem.renderStaticElement(this, poseStack, this.getScreenCoords(), (this.imageWidth - 11) / 2 - width / 2, 117, 0, 0, width, 12, new float[] { 1.0F, 1.0F, 1.0F, 0.6F }, CosmosPortalsReference.DOCK_LABEL);
 			}
 		}
 	}
 	
 	@Override
-	public void renderComponentHoverEffect(MatrixStack matrixStack, Style style, int mouseX, int mouseY) {
-		int[] screen_coords = ScreenUtil.INIT.getScreenCoords(this, this.imageWidth, this.imageHeight);
-
-		ContainerPortalDock container = this.menu;
-		World world = container.getWorld();
-		BlockPos pos = container.getBlockPos();
-		TileEntity tile = world.getBlockEntity(pos);
+	public void renderStandardHoverEffect(PoseStack poseStack, Style style, int mouseX, int mouseY) {
+		BlockEntity entity = this.getBlockEntity();
 		
-		if (tile instanceof TileEntityPortalDock) {
-			TileEntityPortalDock tileEntity = (TileEntityPortalDock) tile;
+		if (entity instanceof BlockEntityPortalDock) {
+			BlockEntityPortalDock blockEntity = (BlockEntityPortalDock) entity;
+
 		
 			if (this.toggleLabelButton.isMouseOver(mouseX, mouseY)) {
-				IFormattableTextComponent[] comp = new IFormattableTextComponent[] { CosmosCompHelper.locComp(CosmosColour.WHITE, false, "cosmosportals.gui.dock.label_info"), 
-					CosmosCompHelper.locComp(CosmosColour.GRAY, false, "cosmosportals.gui.dock.label_value", " ")
-					.append(tileEntity.renderLabel ? CosmosCompHelper.locComp(CosmosColour.GREEN, true, "cosmosportals.gui.dock.label_shown") : CosmosCompHelper.locComp(CosmosColour.RED, true, "cosmosportals.gui.dock.label_hidden"))
+				BaseComponent[] comp = new BaseComponent[] { ComponentHelper.locComp(ComponentColour.WHITE, false, "cosmosportals.gui.dock.label_info"), 
+					(BaseComponent) ComponentHelper.locComp(ComponentColour.GRAY, false, "cosmosportals.gui.dock.label_value", " ")
+					.append(blockEntity.renderLabel ? ComponentHelper.locComp(ComponentColour.GREEN, true, "cosmosportals.gui.dock.label_shown") : ComponentHelper.locComp(ComponentColour.RED, true, "cosmosportals.gui.dock.label_hidden"))
 				};
 				
-				this.renderComponentTooltip(matrixStack, Arrays.asList(comp), mouseX, mouseY);
+				this.renderComponentTooltip(poseStack, Arrays.asList(comp), mouseX, mouseY);
 			}
 			
 			if (this.toggleSoundButton.isMouseOver(mouseX, mouseY)) {
-				IFormattableTextComponent[] comp = new IFormattableTextComponent[] { CosmosCompHelper.locComp(CosmosColour.WHITE, false, "cosmosportals.gui.dock.sounds_info"), 
-					CosmosCompHelper.locComp(CosmosColour.GRAY, false, "cosmosportals.gui.dock.sounds_value", " ")
-					.append(tileEntity.playSound ? CosmosCompHelper.locComp(CosmosColour.GREEN, true, "cosmosportals.gui.dock.sounds_played") : CosmosCompHelper.locComp(CosmosColour.RED, true, "cosmosportals.gui.dock.sounds_muffled"))
+				BaseComponent[] comp = new BaseComponent[] { ComponentHelper.locComp(ComponentColour.WHITE, false, "cosmosportals.gui.dock.sounds_info"), 
+					(BaseComponent) ComponentHelper.locComp(ComponentColour.GRAY, false, "cosmosportals.gui.dock.sounds_value", " ")
+					.append(blockEntity.playSound ? ComponentHelper.locComp(ComponentColour.GREEN, true, "cosmosportals.gui.dock.sounds_played") : ComponentHelper.locComp(ComponentColour.RED, true, "cosmosportals.gui.dock.sounds_muffled"))
 				};
 				
-				this.renderComponentTooltip(matrixStack, Arrays.asList(comp), mouseX, mouseY);
+				this.renderComponentTooltip(poseStack, Arrays.asList(comp), mouseX, mouseY);
 			}
 			
 			if (this.toggleEntityButton.isMouseOver(mouseX, mouseY)) {
-				IFormattableTextComponent[] comp = new IFormattableTextComponent[] { CosmosCompHelper.locComp(CosmosColour.WHITE, false, "cosmosportals.gui.dock.entity_info"), 
-					CosmosCompHelper.locComp(CosmosColour.GRAY, false, "cosmosportals.gui.dock.entity_value", " ")
-					.append(tileEntity.allowEntities ? CosmosCompHelper.locComp(CosmosColour.GREEN, true, "cosmosportals.gui.dock.entity_all") : CosmosCompHelper.locComp(CosmosColour.RED, true, "cosmosportals.gui.dock.entity_player"))
+				BaseComponent[] comp = new BaseComponent[] { ComponentHelper.locComp(ComponentColour.WHITE, false, "cosmosportals.gui.dock.entity_info"), 
+					(BaseComponent) ComponentHelper.locComp(ComponentColour.GRAY, false, "cosmosportals.gui.dock.entity_value", " ")
+					.append(blockEntity.allowedEntities.getColouredComp())
 				};
 				
-				this.renderComponentTooltip(matrixStack, Arrays.asList(comp), mouseX, mouseY);
+				this.renderComponentTooltip(poseStack, Arrays.asList(comp), mouseX, mouseY);
 			}
 
 			if (this.toggleParticlesButton.isMouseOver(mouseX, mouseY)) {
-				IFormattableTextComponent[] comp = new IFormattableTextComponent[] { CosmosCompHelper.locComp(CosmosColour.WHITE, false, "cosmosportals.gui.dock.particle_info"), 
-					CosmosCompHelper.locComp(CosmosColour.GRAY, false, "cosmosportals.gui.dock.particle_value", " ")
-					.append(tileEntity.showParticles ? CosmosCompHelper.locComp(CosmosColour.GREEN, true, "cosmosportals.gui.dock.particle_shown") : CosmosCompHelper.locComp(CosmosColour.RED, true, "cosmosportals.gui.dock.particle_hidden"))
+				BaseComponent[] comp = new BaseComponent[] { ComponentHelper.locComp(ComponentColour.WHITE, false, "cosmosportals.gui.dock.particle_info"), 
+					(BaseComponent) ComponentHelper.locComp(ComponentColour.GRAY, false, "cosmosportals.gui.dock.particle_value", " ")
+					.append(blockEntity.showParticles ? ComponentHelper.locComp(ComponentColour.GREEN, true, "cosmosportals.gui.dock.particle_shown") : ComponentHelper.locComp(ComponentColour.RED, true, "cosmosportals.gui.dock.particle_hidden"))
 				};
 				
-				this.renderComponentTooltip(matrixStack, Arrays.asList(comp), mouseX, mouseY);
+				this.renderComponentTooltip(poseStack, Arrays.asList(comp), mouseX, mouseY);
 			}
 		}
+		super.renderStandardHoverEffect(poseStack, style, mouseX, mouseY);
 	}
 		
 	@Override
-	protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
-		drawCenteredString(matrixStack, font, this.title, this.imageWidth / 2, 17, ScreenUtil.DEFAULT_COLOUR_FONT_LIST);
+	protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+		drawCenteredString(poseStack, font, this.title, this.imageWidth / 2, 17, CosmosUISystem.DEFAULT_COLOUR_FONT_LIST);
 		
-		this.font.draw(matrixStack, this.inventory.getDisplayName(), (float) this.inventoryLabelX + 1, (float) this.inventoryLabelY + 94, ScreenUtil.DEFAULT_COLOUR_BACKGROUND);
+		super.renderLabels(poseStack, mouseX, mouseY);
 	}
 	
-	private void drawButtons(int[] screen_coords) {
-		this.buttons.clear();
+	@Override
+	protected void addButtons() {
+		super.addButtons();
+		BlockEntity entity = this.getBlockEntity();
 		
-		ContainerPortalDock container = this.menu;
-		World world = container.getWorld();
-		BlockPos pos = container.getBlockPos();
-		TileEntity tile = world.getBlockEntity(pos);
-		
-		if (tile instanceof TileEntityPortalDock) {
-			TileEntityPortalDock tileEntity = (TileEntityPortalDock) tile;
+		if (entity instanceof BlockEntityPortalDock) {
+			BlockEntityPortalDock blockEntity = (BlockEntityPortalDock) entity;
 			
-			this.toggleLabelButton  	= this.addButton(new CosmosButtonCustom(TYPE.GENERAL, screen_coords[0] + indexL[0], screen_coords[1] + indexL[1], 18, true, true, tileEntity.renderLabel   ? 1 : 2, CosmosCompHelper.locComp(""), (button) -> { this.pushButton(this.toggleLabelButton);	  }));
-			this.toggleSoundButton   	= this.addButton(new CosmosButtonCustom(TYPE.GENERAL, screen_coords[0] + indexS[0], screen_coords[1] + indexS[1], 18, true, true, tileEntity.playSound     ? 1 : 2, CosmosCompHelper.locComp(""), (button) -> { this.pushButton(this.toggleSoundButton); 	  }));
-			this.toggleEntityButton  	= this.addButton(new CosmosButtonCustom(TYPE.GENERAL, screen_coords[0] + indexE[0], screen_coords[1] + indexE[1], 18, true, true, tileEntity.allowEntities ? 1 : 2, CosmosCompHelper.locComp(""), (button) -> { this.pushButton(this.toggleEntityButton);	  }));
-			this.toggleParticlesButton  = this.addButton(new CosmosButtonCustom(TYPE.GENERAL, screen_coords[0] + indexP[0], screen_coords[1] + indexP[1], 18, true, true, tileEntity.showParticles ? 1 : 2, CosmosCompHelper.locComp(""), (button) -> { this.pushButton(this.toggleParticlesButton);  }));
+			int i = 0;
+			int j = blockEntity.allowedEntities.getIndex();
+			
+			if (j == 0) {
+				i = 2;
+			} else if (j == 1) {
+				i = 15;
+			} else if (j == 2) {
+				i = 19;
+			} else if (j == 3) {
+				i = 1;
+			}
+
+			this.toggleLabelButton  	= this.addRenderableWidget(new CosmosButtonWithType(TYPE.GENERAL, this.getScreenCoords()[0] + indexL[0], this.getScreenCoords()[1] + indexL[1], indexL[2], true, true, blockEntity.renderLabel   ? 1 : 2, ComponentHelper.locComp(""), (button) -> { this.pushButton(this.toggleLabelButton);	 }));
+			this.toggleSoundButton   	= this.addRenderableWidget(new CosmosButtonWithType(TYPE.GENERAL, this.getScreenCoords()[0] + indexS[0], this.getScreenCoords()[1] + indexS[1], indexS[2], true, true, blockEntity.playSound     ? 1 : 2, ComponentHelper.locComp(""), (button) -> { this.pushButton(this.toggleSoundButton);     }));
+			this.toggleEntityButton  	= this.addRenderableWidget(new CosmosButtonWithType(TYPE.GENERAL, this.getScreenCoords()[0] + indexE[0], this.getScreenCoords()[1] + indexE[1], indexE[2], true, true, i,                                 ComponentHelper.locComp(""), (button) -> { this.pushButton(this.toggleEntityButton);	 }));
+			this.toggleParticlesButton  = this.addRenderableWidget(new CosmosButtonWithType(TYPE.GENERAL, this.getScreenCoords()[0] + indexP[0], this.getScreenCoords()[1] + indexP[1], indexP[2], true, true, blockEntity.showParticles ? 1 : 2, ComponentHelper.locComp(""), (button) -> { this.pushButton(this.toggleParticlesButton); }));
+			
+			//this.reformPortalButton     = this.addRenderableWidget(new CosmosButtonWithType(TYPE.GENERAL, this.getScreenCoords()[0] + indexR[0], this.getScreenCoords()[1] + indexR[1], indexR[2], !blockEntity.isPortalFormed, true,          1, ComponentHelper.locComp(""), (button) -> { this.pushButton(this.reformPortalButton);    }));
+		}
+	}
+	
+	@Override
+	public void pushButton(Button button) {
+		super.pushButton(button);
+		BlockEntity entity = this.getBlockEntity();
+		
+		if (entity instanceof BlockEntityPortalDock) {
+			BlockEntityPortalDock blockEntity = (BlockEntityPortalDock) entity;
+			
+			if (button.equals(this.toggleLabelButton)) {
+				NetworkManager.sendToServer(new PacketPortalDock(this.menu.getBlockPos(), 0));
+				blockEntity.toggleRenderLabel();
+			}
+			
+			if (button.equals(this.toggleSoundButton)) {
+				NetworkManager.sendToServer(new PacketPortalDock(this.menu.getBlockPos(), 1));
+				blockEntity.togglePlaySound();
+			}
+			
+			if (button.equals(this.toggleEntityButton)) {
+				NetworkManager.sendToServer(new PacketPortalDock(this.menu.getBlockPos(), 2));
+				blockEntity.toggleEntities();
+			}
+
+			if (button.equals(this.toggleParticlesButton)) {
+				NetworkManager.sendToServer(new PacketPortalDock(this.menu.getBlockPos(), 3));
+				blockEntity.toggleParticles();
+			}
 			
 		}
 	}
 	
-	public void pushButton(Button button) {
-		ContainerPortalDock container = this.menu;
-		World world = container.getWorld();
-		BlockPos pos = container.getBlockPos();
-		TileEntity tile = world.getBlockEntity(pos);
-		
-		if (tile instanceof TileEntityPortalDock) {
-			TileEntityPortalDock tileEntity = (TileEntityPortalDock) tile;
-			
-			if (button.equals(this.toggleLabelButton)) {
-				CoreNetworkManager.sendToServer(new PacketPortalDock(pos, 0));
-				tileEntity.toggleRenderLabel();
-			}
-			
-			if (button.equals(this.toggleSoundButton)) {
-				CoreNetworkManager.sendToServer(new PacketPortalDock(pos, 1));
-				tileEntity.togglePlaySound();
-			}
-			
-			if (button.equals(this.toggleEntityButton)) {
-				CoreNetworkManager.sendToServer(new PacketPortalDock(pos, 2));
-				tileEntity.toggleEntities();
-			}
+	@Override
+	protected void addUIHelpElements() {
+		super.addUIHelpElements();
 
-			if (button.equals(this.toggleParticlesButton)) {
-				CoreNetworkManager.sendToServer(new PacketPortalDock(pos, 3));
-				tileEntity.toggleParticles();
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 73, 132, 34, 34, ComponentHelper.locComp(ComponentColour.WHITE, true, "cosmosportals.ui.help.container"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.container_one"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.container_two")
+		);
+		
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 144, 109, 20, 20, ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, true, "cosmosportals.ui.help.container_item"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.container_item_one"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.container_item_two")
+		);
+		
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 15, 138, 22, 22, ComponentHelper.locComp(ComponentColour.GREEN, true, "cosmosportals.ui.help.button_label"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.button_label_one"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.button_label_two")
+		);
+		
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 45, 138, 22, 22, ComponentHelper.locComp(ComponentColour.GREEN, true, "cosmosportals.ui.help.button_sounds"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.button_sounds_one"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.button_sounds_two")
+		);
+		
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 113, 138, 22, 22, ComponentHelper.locComp(ComponentColour.GREEN, true, "cosmosportals.ui.help.button_entity"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.button_entity_one"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.button_entity_two"),
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.button_entity_three")
+		);
+		
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 143, 138, 22, 22, ComponentHelper.locComp(ComponentColour.GREEN, true, "cosmosportals.ui.help.button_effects"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.button_effects_one"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.button_effects_two")
+		);
+		
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 43, 115, 94, 16, ComponentHelper.locComp(ComponentColour.DARK_GREEN, true, "cosmosportals.ui.help.label"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.label_one"), 
+			ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.ui.help.label_two")
+		);
+	}
+	
+	public void renderPortalLabel(PoseStack poseStack) {
+		BlockEntity entity = this.getBlockEntity();
+		
+		if (entity instanceof BlockEntityPortalDock) {
+			BlockEntityPortalDock blockEntity = (BlockEntityPortalDock) entity;
+			
+			if (blockEntity.isPortalFormed && blockEntity.renderLabel) {
+				String human_name = WordUtils.capitalizeFully(blockEntity.destDimension.getPath().replace("_", " "));
+				int portalColour = blockEntity.getDisplayColour();
+				
+				drawCenteredString(poseStack, font, human_name, this.getScreenCoords()[0] + (this.imageWidth - 11) / 2, this.getScreenCoords()[1] + 119, portalColour);
 			}
 		}
 	}

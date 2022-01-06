@@ -4,17 +4,17 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 
-public class CoreConfigurationManager {
+public class ConfigurationManager {
 	
 	public static final ForgeConfigSpec spec;
 	
-	static final CoreConfigurationManager INSTANCE;
+	static final ConfigurationManager INSTANCE;
 	
 	static {
 		{
-			final Pair<CoreConfigurationManager, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(CoreConfigurationManager::new);
+			final Pair<ConfigurationManager, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ConfigurationManager::new);
 			INSTANCE = specPair.getLeft();
 			spec = specPair.getRight();
 		}
@@ -24,7 +24,7 @@ public class CoreConfigurationManager {
 		spec.save();
 	}
 
-	private final IntValue portal_maximum_size;
+	private final DoubleValue portal_maximum_size;
 	private final BooleanValue playPortalTravelSounds;
 	private final BooleanValue playPortalAmbientSounds;
 	
@@ -36,10 +36,10 @@ public class CoreConfigurationManager {
 	private final BooleanValue renderPortalLabels;
 	private final BooleanValue renderPortalParticleEffects;
 	
-	CoreConfigurationManager(final ForgeConfigSpec.Builder builder) {
+	ConfigurationManager(final ForgeConfigSpec.Builder builder) {
 		builder.push("general");
 		{
-			portal_maximum_size = builder.comment("Allows you to change the maximum size of Portals. WARNING: Larger portals WILL create lag").defineInRange("internal_height", 5, 2, 9);
+			portal_maximum_size = builder.comment("Allows you to change the maximum size of Portals. WARNING: Larger portals WILL create lag").defineInRange("internal_height", 5.0F, 2.0F, 9.0F);
 			playPortalTravelSounds = builder.comment("Whether this mod will play Portal Travel Sounds").define("travel_sounds", true);
 			playPortalAmbientSounds = builder.comment("Whether this mod will play Ambient Portal Sounds").define("ambient_sounds", true);
 		}
@@ -62,15 +62,15 @@ public class CoreConfigurationManager {
 		builder.pop();
 	}
 	
-	public static CoreConfigurationManager getInstance() {
+	public static ConfigurationManager getInstance() {
 		return INSTANCE;
 	}
 
-	public int getPortalMaximumSize() {
+	public double getPortalMaximumSize() {
 		return this.portal_maximum_size.get();
 	}
 	
-	public void setPortalMaximumSize(int value) {
+	public void setPortalMaximumSize(double value) {
 		this.portal_maximum_size.set(value);
 	}
 	

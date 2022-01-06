@@ -1,12 +1,18 @@
 {
-	"advancements.dimensional.materials.title": "Dimensional Materials!",
-	"advancements.dimensional.materials.desc": "Mine some Dimensional Ore.",
-	"advancements.dimensional.pockets.title": "Pockets!",
-	"advancements.dimensional.pockets.desc": "Craft a Pocket for the first time.",
-	"advancements.dimensional.nether_star.title": "Splitting the Stars",
-	"advancements.dimensional.nether_star.desc": "Split a nether star into shards.",
-	"advancements.dimensional.ingot.title": "Gearing Up!",
-	"advancements.dimensional.ingot.desc": "Obtain some Dimensional Ingots.",
+	"cosmosportals.advancements.root.title": "Cosmos Portals!",
+	"cosmosportals.advancements.root.desc": "Welcome to Cosmos Portals!",
+	"cosmosportals.advancements.container.title": "Containing Dimensions!",
+	"cosmosportals.advancements.container.desc": "Obtain a Dimension Container.",
+	"cosmosportals.advancements.dock.title": "Controlling your Destiny!",
+	"cosmosportals.advancements.dock.desc": "Obtain a Portal Dock",
+	"cosmosportals.advancements.frame.title": "Framing Dimensions!",
+	"cosmosportals.advancements.frame.desc": "Obtain some Portal Frame Blocks.",
+	"cosmosportals.advancements.ingots.title": "Combining the Cosmos!",
+	"cosmosportals.advancements.ingots.desc": "Craft some Cosmic Ingots.",
+	"cosmosportals.advancements.material.title": "Cosmic Material!",
+	"cosmosportals.advancements.material.desc": "Mine some Cosmic Ore.",
+	"cosmosportals.advancements.use_container.title": "Interdimensional Travel!",
+	"cosmosportals.advancements.use_container.desc": "Put a Dimension Container into a Portal Dock.",
 	
 	"itemGroup.cosmosportals": "Cosmos Portals",
 	
@@ -16,11 +22,14 @@
 	"item.cosmosportals.item_cosmic_pearl": "Cosmic Pearl",
 	"item.cosmosportals.item_cosmic_gem": "Cosmic Gem",
 	
+	"item.cosmosportals.item_cosmic_guide": "Cosmic Guide",
+	
 	"block.cosmosportals.block_portal": "Dimensional Portal",
 	"block.cosmosportals.block_portal_frame": "Portal Frame",
 	"block.cosmosportals.block_portal_dock": "Portal Dock",
 	
 	"block.cosmosportals.block_cosmic_ore": "Cosmic Ore",
+	"block.cosmosportals.block_deepslate_cosmic_ore": "Deepslate Cosmic Ore",
 	"block.cosmosportals.block_cosmic": "Cosmic Block",
 
 	"cosmosportals.modid": "Cosmos Portals",
@@ -63,6 +72,8 @@
 	"cosmosportals.gui.config.particles": "Portal Particles",
 	"cosmosportals.gui.config.particles_info": "Whether or not Portal Particle Effects are rendered",
 	
+	"cosmosportals.gui.config.message.restart": "A restart is required for this option to take effect",
+	
 	"cosmosportals.gui.done": "Done",
 	
 	"cosmosportals.gui.dock": "Portal Dock",
@@ -77,10 +88,8 @@
 	"cosmosportals.gui.dock.sounds_played": "Played",
 	"cosmosportals.gui.dock.sounds_muffled": "Muffled",
 	
-	"cosmosportals.gui.dock.entity_info": "Allow all Entities to pass, or only Players.",
+	"cosmosportals.gui.dock.entity_info": "Cycle the Entity Filter.",
 	"cosmosportals.gui.dock.entity_value": "Entities allowed:",
-	"cosmosportals.gui.dock.entity_all": "All Enities",
-	"cosmosportals.gui.dock.entity_player": "Players Only",
 	
 	"cosmosportals.gui.dock.particle_info": "Show or Hide Particle Effects.",
 	"cosmosportals.gui.dock.particle_value": "Particle Effects are currently:",
@@ -97,11 +106,71 @@
 	"cosmosportals.item_message.container_recorded": "Dimension and Position Recorded!",
 	"cosmosportals.item_warning.container_stored": "This container already has a Recorded Dimension! Shift-right-click to overwrite.",
 	
+	"cosmosportals.item_info.guide": "A full guide on Cosmos Portals!",
+	"cosmosportals.item_info.guide_one": "Contains crafting recipes, mechanics and more.",
+	"cosmosportals.item_info.guide_two": "To access the Guide, simply right click your Guide.",
+	
 	"cosmosportals.block_info.frame": "Cosmic Portal Frame",
 	"cosmosportals.block_info.frame_one": "Safe for decoration.",
 	
 	"cosmosportals.block_info.dock": "Cosmic Portal Dock",
 	"cosmosportals.block_info.dock_one": "Portal Controller. Used to summon a Portal.",
 	"cosmosportals.block_info.dock_two": "To use: Shift-right-click an activated Dimension Container.",
-	"cosmosportals.block_info.dock_three": "Has a GUI, can be configured."
+	"cosmosportals.block_info.dock_three": "Has a GUI, can be configured.",
+	
+	
+	"cosmosportals.guide.button_one": "Exit",
+	"cosmosportals.guide.button_two": "Home",
+	"cosmosportals.guide.button_three": "Next Page",
+	"cosmosportals.guide.button_four": "Previous Page",
+	
+	"cosmosportals.guide.page": "Page: ",
+	"cosmosportals.guide.heading": "Cosmic Guide",
+	
+	"cosmosportals.guide.one_body": "Welcome to:<br>",
+	"cosmosportals.guide.one_body_one": "Cosmos Portals!<br>",
+	"cosmosportals.guide.one_body_two": "<br>This Guide will enable you to<br>better understand how to use<br>the mod, with all the recipes<br>you need to get started!",
+	"cosmosportals.guide.one_body_heading": "Contents:",
+	"cosmosportals.guide.foot_one": "Contents",
+	
+	
+	"cosmosportals.guide.two_heading": "[1]: Introduction",
+	"cosmosportals.guide.two_body_one": "So, you've decided you want<br>to explore the world of<br>Portals?<br> <br>Well, you have come to the<br>right place!",
+	"cosmosportals.guide.two_body_two": "In this guide, you will learn:",
+	"cosmosportals.guide.two_sub_one": "-How to use Portals",
+	"cosmosportals.guide.two_sub_two": "-Cosmic Items + their uses",
+	"cosmosportals.guide.two_sub_three": "-Cosmic Configuration",
+	"cosmosportals.guide.two_sub_four": "-Cosmic Crafting Recipes",
+	"cosmosportals.guide.two_body_three": "To continue please use either<br>the tabs on the right side,<br>or the arrows at the bottom.",
+	"cosmosportals.guide.foot_two": "Introduction",
+	
+	
+	"cosmosportals.guide.three_heading": "[2]: Portals",
+	"cosmosportals.guide.three_body_one": "This is a Portal Dock.<br>It is the heart of the Mod.<br>To use it: Shift-right click<br> with a linked Dimension Container<br>Thats it! It really is that simple.<br>This will create a<br>Portal to the linked Dimension",
+	"cosmosportals.guide.three_body_one_": "Portal Docks are highly<br>configurable.<br>You can choose to display<br>a label to show which<br>Dimension the Portal<br>links to, show particle<br>effects and much more!",
+	"cosmosportals.guide.foot_three": "Portals: ",
+	
+	
+	"cosmosportals.guide.four_heading": "[3]: Cosmic Items",
+	
+	"cosmosportals.guide.foot_four": "Items: ",
+	
+	
+	"cosmosportals.guide.five_heading": "[4]: Configuration",
+	
+	"cosmosportals.guide.foot_five": "Configuration: ",
+	
+	
+	"cosmosportals.guide.six_heading": "[5]: Recipes",
+	"cosmosportals.guide.six_heading_one": "Crafting Bench",
+	
+	"cosmosportals.guide.foot_six": "Recipes: ",
+	
+	
+	"cosmosportals.guide.seven_tab": "[6]: Credits",
+	"cosmosportals.guide.seven_heading": "[6]: Credits (Dev Team)",
+	
+	"cosmosportals.guide.foot_seven": "Credits: ",
+	
+	"cosmosportals.guide.": ""
 }

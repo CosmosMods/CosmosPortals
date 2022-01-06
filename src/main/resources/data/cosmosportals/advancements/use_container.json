@@ -1,0 +1,41 @@
+{
+	"parent": "cosmosportals:dock",
+	"display": {
+		"icon": {
+			"item": "cosmosportals:block_portal"
+		},
+		"title": {
+			"translate": "cosmosportals.advancements.use_container.title"
+		},
+		"description": {
+			"translate": "cosmosportals.advancements.use_container.desc"
+		},
+		"background": "cosmosportals:textures/gui/advancements/backgrounds/material.png",
+		"frame": "goal",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"use_container": {
+			"trigger": "minecraft:item_used_on_block",
+			"conditions": {
+				"location": {
+					"block": {
+						"block": "cosmosportals:block_portal_dock"
+					}
+				},
+				"item": {
+					"items": [
+						"cosmosportals:item_dimension_container"
+					]
+				}
+			}
+		}
+	},
+	"requirements": [
+		[
+			"use_container"
+		]
+	]
+}

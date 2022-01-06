@@ -1,9 +1,9 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "III",
-        "ISI",
-        "III"
+        "ICI",
+        "CSC",
+        "ICI"
     ],
     "key": {
         "S": {
@@ -11,6 +11,9 @@
         },
         "I" : {
             "item": "minecraft:iron_ingot"
+        },
+        "C" : {
+            "item": "minecraft:copper_ingot"
         }
     },
     "result": {

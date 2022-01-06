@@ -3,8 +3,12 @@
 		"icon": {
 			"item": "cosmosportals:block_portal_dock"
 		},
-		"title": "Cosmos Portals!",
-		"description": "Welcome to Cosmos Portals!",
+		"title": {
+			"translate": "cosmosportals.advancements.root.title"
+		},
+		"description": {
+			"translate": "cosmosportals.advancements.root.desc"
+		},
 		"background": "cosmosportals:textures/gui/advancements/backgrounds/material.png",
 		"frame": "task",
 		"show_toast": false,
@@ -12,12 +16,14 @@
 		"hidden": false
 	},
 	"criteria": {
-		"craft": {
+		"crafting_table": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
 				"items": [
 					{
-						"item": "minecraft:crafting_table"
+						"items": [ 
+							"minecraft:crafting_table"
+						]
 					}
 				]
 			}
@@ -25,7 +31,7 @@
 	},
 	"requirements": [
 		[
-			"craft"
+			"crafting_table"
 		]
 	]
 }
