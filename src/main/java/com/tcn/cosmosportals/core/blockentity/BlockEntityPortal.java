@@ -1,19 +1,17 @@
 package com.tcn.cosmosportals.core.blockentity;
 
-import java.util.Random;
-
 import com.tcn.cosmoslibrary.common.enums.EnumAllowedEntities;
 import com.tcn.cosmoslibrary.common.lib.ComponentColour;
 import com.tcn.cosmoslibrary.core.teleport.CosmosTeleportCore;
 import com.tcn.cosmoslibrary.core.teleport.CosmosTeleporter;
 import com.tcn.cosmoslibrary.registry.gson.object.ObjectDestinationInfo;
-import com.tcn.cosmosportals.core.block.BlockPortal;
-import com.tcn.cosmosportals.core.management.ConfigurationManager;
+import com.tcn.cosmosportals.core.management.ConfigurationManagerCommon;
 import com.tcn.cosmosportals.core.management.CoreSoundManager;
 import com.tcn.cosmosportals.core.management.EventFactory;
-import com.tcn.cosmosportals.core.management.ModBusManager;
+import com.tcn.cosmosportals.core.management.ModObjectHolder;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -24,7 +22,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -45,24 +45,28 @@ public class BlockEntityPortal extends BlockEntity {
 	public boolean playSound = true;
 	public EnumAllowedEntities allowedEntities = EnumAllowedEntities.ALL;
 	public boolean showParticles = true;
+	
+	public boolean entityInside = false;
+	private boolean teleported = false;
+	
+	private Entity entityToTele = null;
 
 	public BlockEntityPortal(BlockPos posIn, BlockState stateIn) {
-		super(ModBusManager.PORTAL_BLOCK_ENTITY_TYPE, posIn, stateIn);
+		super(ModObjectHolder.tile_portal, posIn, stateIn);
 		
-		this.type = ModBusManager.PORTAL_BLOCK_ENTITY_TYPE;
+		this.type = ModObjectHolder.tile_portal;
 	}
 	
 	public void sendUpdates(boolean update) {
 		if (level != null) {
 			this.setChanged();
 			BlockState state = this.getBlockState();
-			BlockPortal block = (BlockPortal) state.getBlock();
 			
 			level.sendBlockUpdated(this.getBlockPos(), state, state, 3);
 			
 			if (update) {
 				if (!level.isClientSide) {
-					level.setBlockAndUpdate(this.getBlockPos(), block.updateState(state, this.getBlockPos(), this.getLevel()));
+					level.setBlockAndUpdate(this.getBlockPos(), state.updateShape(Direction.DOWN, state, level, worldPosition, worldPosition));
 				}
 			}
 		}
@@ -126,6 +130,8 @@ public class BlockEntityPortal extends BlockEntity {
 		compound.putBoolean("playSound", this.playSound);
 		compound.putInt("allowedEntities", this.allowedEntities.getIndex());
 		compound.putBoolean("showParticles", this.showParticles);
+		
+		compound.putBoolean("inside", this.entityInside);
 	}
 	
 	@Override
@@ -141,11 +147,15 @@ public class BlockEntityPortal extends BlockEntity {
 		this.playSound = compound.getBoolean("playSound");
 		this.allowedEntities = EnumAllowedEntities.getStateFromIndex(compound.getInt("allowedEntities"));
 		this.showParticles = compound.getBoolean("showParticles");
+		
+		this.entityInside = compound.getBoolean("inside");
 	}
 	
 	@Override
 	public void handleUpdateTag(CompoundTag tag) {
 		this.load(tag);
+		
+		this.sendUpdates(true);
 	}
 	
 	@Override
@@ -168,68 +178,98 @@ public class BlockEntityPortal extends BlockEntity {
 		this.handleUpdateTag(tag_);
 	}
 	
-	public void entityInside(BlockState stateIn, Level worldIn, BlockPos posIn, Entity entityIn) {
-		if (!entityIn.isPassenger() && !entityIn.isVehicle() && entityIn.canChangeDimensions()) {
-			if (this.isPortalAtFeet(worldIn, this.getBlockPos(), entityIn)) {
-				if (!entityIn.isOnPortalCooldown()) {
-					if (!this.destDimension.getNamespace().isEmpty() && !this.destDimension.getPath().isEmpty()) {
-						if (this.getDestPos() != null && this.getDestPos() != BlockPos.ZERO) {
-							BlockPos targetPos = this.getDestPos();
-							float yaw = this.destInfo.getYaw();
-							float pitch = this.destInfo.getPitch();
-	
-							if (entityIn.level.dimension().equals(this.getDestDimension())) {
-								if (entityIn instanceof ServerPlayer) {
-									ServerPlayer playerIn = (ServerPlayer) entityIn;
-									
-									if (!playerIn.isShiftKeyDown()) {
-										if (this.allowedEntities.equals(EnumAllowedEntities.ALL) || this.allowedEntities.equals(EnumAllowedEntities.PLAYERS_ONLY)) {
-											if (ConfigurationManager.getInstance().getPlayPortalTravelSounds() && this.playSound) {
-												playerIn.connection.send(new ClientboundSoundPacket(CoreSoundManager.PORTAL_TRAVEL, SoundSource.AMBIENT, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0.1F, 1));
+	public static void tick(Level levelIn, BlockPos posIn, BlockState stateIn, BlockEntityPortal entityIn) {
+		if (!levelIn.isClientSide) {
+			if (entityIn.entityInside && !entityIn.teleported && entityIn.entityToTele != null) {
+				entityIn.teleported = true;
+				Entity entityToTeleport = entityIn.entityToTele;
+				
+				if (!entityIn.destDimension.getNamespace().isEmpty() && !entityIn.destDimension.getPath().isEmpty()) {
+					if (entityIn.getDestPos() != null && entityIn.getDestPos() != BlockPos.ZERO) {
+						BlockPos targetPos = entityIn.getDestPos();
+						float yaw = entityIn.destInfo.getYaw();
+						float pitch = entityIn.destInfo.getPitch();
+
+						if (entityToTeleport.level.dimension().equals(entityIn.getDestDimension())) {
+							if (entityToTeleport instanceof ServerPlayer) {
+								ServerPlayer playerIn = (ServerPlayer) entityToTeleport;
+								
+								if (!playerIn.isShiftKeyDown()) {
+									if (entityIn.allowedEntities.equals(EnumAllowedEntities.ALL) || entityIn.allowedEntities.equals(EnumAllowedEntities.PLAYERS_ONLY)) {
+										if (ConfigurationManagerCommon.getInstance().getPlayPortalTravelSounds() && entityIn.playSound) {
+											playerIn.connection.send(new ClientboundSoundPacket(CoreSoundManager.PORTAL_TRAVEL.get(), SoundSource.AMBIENT, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0.1F, 1, 1));
+										}
+										
+										if (EventFactory.onPortalTravel(playerIn, playerIn.blockPosition(), targetPos, entityIn.destDimension)) {
+											playerIn.connection.teleport(targetPos.getX() + 0.5, targetPos.getY(), targetPos.getZ() + 0.5, yaw, pitch);
+										}
+										
+										playerIn.setYHeadRot(yaw);
+										playerIn.setYBodyRot(pitch);
+									}
+								}
+							} else {
+								if (EventFactory.onPortalTravel(entityToTeleport, entityToTeleport.blockPosition(), targetPos, entityIn.destDimension)) {
+									if (entityIn.allowedEntities.equals(EnumAllowedEntities.ALL) || entityIn.allowedEntities.equals(EnumAllowedEntities.NON_PLAYERS_ONLY)) {
+										
+										if (entityToTeleport.getType().equals(EntityType.WARDEN)) {
+											if (ConfigurationManagerCommon.getInstance().getAllowWardenTeleport()) {
+													entityToTeleport.teleportTo(targetPos.getX(), targetPos.getY(), targetPos.getZ());
 											}
-											
-											if (EventFactory.onPortalTravel(playerIn, playerIn.blockPosition(), targetPos, this.destDimension)) {
-												playerIn.connection.teleport(targetPos.getX() + 0.5, targetPos.getY(), targetPos.getZ() + 0.5, yaw, pitch);
-											}
-	
-											this.setCooldown(entityIn, 4);
-		
-											playerIn.setYHeadRot(yaw);
-											playerIn.setYBodyRot(pitch);
+										} else {
+											entityToTeleport.teleportTo(targetPos.getX(), targetPos.getY(), targetPos.getZ());
 										}
 									}
-								} else {
-									if (EventFactory.onPortalTravel(entityIn, entityIn.blockPosition(), targetPos, this.destDimension)) {
-										if (this.allowedEntities.equals(EnumAllowedEntities.ALL) || this.allowedEntities.equals(EnumAllowedEntities.NON_PLAYERS_ONLY)) {
-											entityIn.teleportTo(targetPos.getX(), targetPos.getY(), targetPos.getZ());
+								}
+							}
+						} else {
+							if (entityToTeleport instanceof ServerPlayer) {
+								ServerPlayer playerIn = (ServerPlayer) entityToTeleport;
+								
+								if (!playerIn.isShiftKeyDown()) {
+									if (entityIn.allowedEntities.equals(EnumAllowedEntities.ALL) || entityIn.allowedEntities.equals(EnumAllowedEntities.PLAYERS_ONLY)) {
+										CosmosTeleporter teleporter = CosmosTeleporter.createTeleporter(entityIn.getDestDimension(), targetPos, yaw, pitch, false, false, true);
+										
+										if (EventFactory.onPortalTravel(playerIn, playerIn.blockPosition(), targetPos, entityIn.destDimension)) {
+											CosmosTeleportCore.shiftPlayerToDimension(playerIn, teleporter, ConfigurationManagerCommon.getInstance().getPlayPortalTravelSounds() && entityIn.playSound ? CoreSoundManager.PORTAL_TRAVEL.get() : null, 0.1F);
 										}
 									}
 								}
 							} else {
-								if (entityIn instanceof ServerPlayer) {
-									ServerPlayer playerIn = (ServerPlayer) entityIn;
-									
-									if (!playerIn.isShiftKeyDown()) {
-										if (this.allowedEntities.equals(EnumAllowedEntities.ALL) || this.allowedEntities.equals(EnumAllowedEntities.PLAYERS_ONLY)) {
-											CosmosTeleporter teleporter = CosmosTeleporter.createTeleporter(this.getDestDimension(), targetPos, yaw, pitch, false, false, true);
-											
-											if (EventFactory.onPortalTravel(playerIn, playerIn.blockPosition(), targetPos, this.destDimension)) {
-												CosmosTeleportCore.shiftPlayerToDimension(playerIn, teleporter, ConfigurationManager.getInstance().getPlayPortalTravelSounds() && this.playSound ? CoreSoundManager.PORTAL_TRAVEL : null, 0.1F);
-											}
-										}
-									}
-								} else {
-									CosmosTeleporter teleporter = CosmosTeleporter.createTeleporter(this.getDestDimension(), targetPos, yaw, pitch, false, false, true);
+								CosmosTeleporter teleporter = CosmosTeleporter.createTeleporter(entityIn.getDestDimension(), targetPos, yaw, pitch, false, false, true);
 
-									if (EventFactory.onPortalTravel(entityIn, entityIn.blockPosition(), targetPos, this.destDimension)) {
-										if (this.allowedEntities.equals(EnumAllowedEntities.ALL) || this.allowedEntities.equals(EnumAllowedEntities.NON_PLAYERS_ONLY)) {
-											entityIn.changeDimension(ServerLifecycleHooks.getCurrentServer().getLevel(this.getDestDimension()), teleporter);
+								if (EventFactory.onPortalTravel(entityToTeleport, entityToTeleport.blockPosition(), targetPos, entityIn.destDimension)) {
+									if (entityIn.allowedEntities.equals(EnumAllowedEntities.ALL) || entityIn.allowedEntities.equals(EnumAllowedEntities.NON_PLAYERS_ONLY)) {
+
+										if (entityToTeleport.getType().equals(EntityType.WARDEN)) {
+											if (ConfigurationManagerCommon.getInstance().getAllowWardenTeleport()) {
+												entityToTeleport.changeDimension(ServerLifecycleHooks.getCurrentServer().getLevel(entityIn.getDestDimension()), teleporter);
+											} 
+										} else {
+											entityToTeleport.changeDimension(ServerLifecycleHooks.getCurrentServer().getLevel(entityIn.getDestDimension()), teleporter);
 										}
 									}
 								}
 							}
 						}
 					}
+				}
+				
+				entityIn.entityToTele = null;
+				entityIn.entityInside = false;
+				entityIn.teleported = false;
+			}
+		}
+	}
+	
+	
+	public void entityInside(BlockState stateIn, Level worldIn, BlockPos posIn, Entity entityIn) {
+		if (!entityIn.isPassenger() && !entityIn.isVehicle() && entityIn.canChangeDimensions()) {
+			if (this.isPortalAtFeet(worldIn, this.getBlockPos(), entityIn)) {
+				
+				if (!this.entityInside && this.entityToTele == null) {
+					this.entityInside = true;
+					this.entityToTele = entityIn;
 				}
 			}
 		}
@@ -246,7 +286,7 @@ public class BlockEntityPortal extends BlockEntity {
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos posIn, Random randIn) {
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos posIn, RandomSource randIn) {
 		if (this.showParticles) {
 			for (int i = 0; i < 3; ++i) {
 				double d0 = (double) posIn.getX() + randIn.nextDouble();
@@ -291,5 +331,4 @@ public class BlockEntityPortal extends BlockEntity {
 	public BlockEntityType<?> getType() {
 		return this.type;
 	}
-
 }

@@ -20,7 +20,7 @@ public class GuideChangeButton extends Button {
 	private ResourceLocation texture;
 
 	public GuideChangeButton(int x, int y, boolean isForward, Button.OnPress onPress, boolean playTurnSound, ResourceLocation location) {
-		super(x, y, 25, 13, ComponentHelper.locComp(""), onPress);
+		super(x, y, 25, 13, ComponentHelper.empty(), onPress);
 		this.isForward = isForward;
 		this.playTurnSound = playTurnSound;
 

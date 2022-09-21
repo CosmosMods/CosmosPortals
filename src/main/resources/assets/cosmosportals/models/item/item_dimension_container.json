@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cosmosportals:items/container"
+        "layer0": "cosmosportals:items/linked_container"
     }
 }

@@ -4,17 +4,17 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
-public class ConfigurationManager {
+public class ConfigurationManagerCommon {
 	
 	public static final ForgeConfigSpec spec;
 	
-	static final ConfigurationManager INSTANCE;
+	static final ConfigurationManagerCommon INSTANCE;
 	
 	static {
 		{
-			final Pair<ConfigurationManager, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ConfigurationManager::new);
+			final Pair<ConfigurationManagerCommon, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ConfigurationManagerCommon::new);
 			INSTANCE = specPair.getLeft();
 			spec = specPair.getRight();
 		}
@@ -24,9 +24,10 @@ public class ConfigurationManager {
 		spec.save();
 	}
 
-	private final DoubleValue portal_maximum_size;
+	private final IntValue portal_maximum_size;
 	private final BooleanValue playPortalTravelSounds;
 	private final BooleanValue playPortalAmbientSounds;
+	private final BooleanValue allowWardenTeleport;
 	
 	private final BooleanValue info_message;
 	private final BooleanValue debug_message;
@@ -35,13 +36,15 @@ public class ConfigurationManager {
 	private final BooleanValue portalConnectedTextures;
 	private final BooleanValue renderPortalLabels;
 	private final BooleanValue renderPortalParticleEffects;
+	private final IntValue label_maximum_distance;
 	
-	ConfigurationManager(final ForgeConfigSpec.Builder builder) {
+	ConfigurationManagerCommon(final ForgeConfigSpec.Builder builder) {
 		builder.push("general");
 		{
-			portal_maximum_size = builder.comment("Allows you to change the maximum size of Portals. WARNING: Larger portals WILL create lag").defineInRange("internal_height", 5.0F, 2.0F, 9.0F);
+			portal_maximum_size = builder.comment("Allows you to change the maximum size of Portals. WARNING: Larger portals WILL create lag").defineInRange("internal_height", 5, 2, 9);
 			playPortalTravelSounds = builder.comment("Whether this mod will play Portal Travel Sounds").define("travel_sounds", true);
 			playPortalAmbientSounds = builder.comment("Whether this mod will play Ambient Portal Sounds").define("ambient_sounds", true);
+			allowWardenTeleport = builder.comment("Whether Wardens can travel through Portals").define("warden_teleport", true);
 		}
 		builder.pop();
 		
@@ -58,19 +61,20 @@ public class ConfigurationManager {
 			portalConnectedTextures = builder.comment("Whether or not Portals use Connected Textures").define("portal_connected_textures", true);
 			renderPortalLabels = builder.comment("Whether or not Portal Labels are rendered").define("render_portal_labels", true);
 			renderPortalParticleEffects = builder.comment("Whether or not Portal Particle Effects are rendered").define("render_portal_particle_effects", true);
+			label_maximum_distance = builder.comment("How far away Portal Labels will still render.").defineInRange("label_maximum_distance", 32, 8, 64);
 		}
 		builder.pop();
 	}
 	
-	public static ConfigurationManager getInstance() {
+	public static ConfigurationManagerCommon getInstance() {
 		return INSTANCE;
 	}
 
-	public double getPortalMaximumSize() {
+	public int getPortalMaximumSize() {
 		return this.portal_maximum_size.get();
 	}
 	
-	public void setPortalMaximumSize(double value) {
+	public void setPortalMaximumSize(int value) {
 		this.portal_maximum_size.set(value);
 	}
 	
@@ -88,6 +92,14 @@ public class ConfigurationManager {
 	
 	public void setPlayPortalAmbientSounds(boolean value) {
 		this.playPortalAmbientSounds.set(value);
+	}
+	
+	public boolean getAllowWardenTeleport() {
+		return this.allowWardenTeleport.get();
+	}
+
+	public void setAllowWardenTeleport(boolean value) {
+		this.allowWardenTeleport.set(value);
 	}
 	
 	/** -Messages- */
@@ -138,5 +150,13 @@ public class ConfigurationManager {
 	
 	public void setRenderPortalParticleEffects(boolean value) {
 		this.renderPortalParticleEffects.set(value);
+	}
+	
+	public int getLabelMaximumDistance() {
+		return label_maximum_distance.get();
+	}
+	
+	public void setLabelMaximumDistance(int value) {
+		this.label_maximum_distance.set(value);
 	}
 }

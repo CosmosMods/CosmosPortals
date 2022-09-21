@@ -4,23 +4,26 @@ import com.tcn.cosmosportals.CosmosPortals;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(modid = CosmosPortals.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class CoreSoundManager {
+	
+	public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, CosmosPortals.MOD_ID);
 
 	//public static final ForgeSoundType PORTAL_TYPE = new ForgeSoundType();
 	
-	public static final SoundEvent PORTAL_TRAVEL = new SoundEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_travel")).setRegistryName("portal_travel");
+	public static final RegistryObject<SoundEvent> PORTAL_TRAVEL = SOUNDS.register("portal_travel", () -> new SoundEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_travel")));
 	
-	public static final SoundEvent PORTAL_CREATE = new SoundEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_create")).setRegistryName("portal_create");
-	public static final SoundEvent PORTAL_DESTROY = new SoundEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_destroy")).setRegistryName("portal_destroy");
+	public static final RegistryObject<SoundEvent> PORTAL_CREATE = SOUNDS.register("portal_create", () -> new SoundEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_create")));
+	public static final RegistryObject<SoundEvent> PORTAL_DESTROY = SOUNDS.register("portal_destroy", () -> new SoundEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_destroy")));
 	
-	@SubscribeEvent
-	public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
-		event.getRegistry().registerAll(PORTAL_TRAVEL, PORTAL_CREATE, PORTAL_DESTROY);
+	public static void register(IEventBus bus) {
+		SOUNDS.register(bus);
 	}
 }

@@ -2,7 +2,7 @@ package com.tcn.cosmosportals.client.container;
 
 import com.tcn.cosmoslibrary.client.container.CosmosContainerMenuBlockEntity;
 import com.tcn.cosmoslibrary.client.container.slot.SlotRestrictedAccess;
-import com.tcn.cosmosportals.core.management.ModBusManager;
+import com.tcn.cosmosportals.core.management.ModObjectHolder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -24,7 +24,7 @@ public class ContainerPortalDock extends CosmosContainerMenuBlockEntity {
 	}
 
 	public ContainerPortalDock(int indexIn, Inventory playerInventoryIn, Container contentsIn, ContainerLevelAccess accessIn, BlockPos posIn) {
-		super(ModBusManager.DOCK_CONTAINER_TYPE, indexIn, playerInventoryIn, accessIn, posIn);
+		super(ModObjectHolder.container_portal_dock, indexIn, playerInventoryIn, accessIn, posIn);
 		
 		this.addSlot(new SlotRestrictedAccess(contentsIn, 0, 146, 111, false, false));
 		
@@ -41,12 +41,13 @@ public class ContainerPortalDock extends CosmosContainerMenuBlockEntity {
 		}
 	}
 	
-
+	@Override
 	public void addSlotListener(ContainerListener listenerIn) {
 		super.addSlotListener(listenerIn);
 	}
 
 	@OnlyIn(Dist.CLIENT)
+	@Override
 	public void removeSlotListener(ContainerListener listenerIn) {
 		super.removeSlotListener(listenerIn);
 	}
@@ -64,7 +65,7 @@ public class ContainerPortalDock extends CosmosContainerMenuBlockEntity {
 
 	@Override
 	public boolean stillValid(Player playerIn) {
-		return stillValid(this.access, playerIn, ModBusManager.PORTAL_DOCK);
+		return stillValid(this.access, playerIn, ModObjectHolder.block_portal_dock);
 	}
 
 	@Override

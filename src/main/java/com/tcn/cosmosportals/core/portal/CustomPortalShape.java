@@ -12,8 +12,8 @@ import com.tcn.cosmosportals.core.block.BlockPortal;
 import com.tcn.cosmosportals.core.block.BlockPortalDock;
 import com.tcn.cosmosportals.core.block.BlockPortalFrame;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortal;
-import com.tcn.cosmosportals.core.management.ConfigurationManager;
-import com.tcn.cosmosportals.core.management.ModBusManager;
+import com.tcn.cosmosportals.core.management.ConfigurationManagerCommon;
+import com.tcn.cosmosportals.core.management.ModObjectHolder;
 
 import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPos;
@@ -81,7 +81,7 @@ public class CustomPortalShape {
 
 	@Nullable
 	private BlockPos calculateBottomLeft(BlockPos posIn) {
-		for (int i = (int) Math.max(0, posIn.getY() - (ConfigurationManager.getInstance().getPortalMaximumSize())); posIn.getY() > i && isEmpty(this.level.getBlockState(posIn.below())); posIn = posIn.below()) { }
+		for (int i = (int) Math.max(0, posIn.getY() - (ConfigurationManagerCommon.getInstance().getPortalMaximumSize())); posIn.getY() > i && isEmpty(this.level.getBlockState(posIn.below())); posIn = posIn.below()) { }
 
 		Direction direction = this.rightDir.getOpposite();
 		int j = this.getDistanceUntilEdgeAboveFrame(posIn, direction) - 1;
@@ -90,13 +90,13 @@ public class CustomPortalShape {
 
 	private int calculateWidth() {
 		int i = this.getDistanceUntilEdgeAboveFrame(this.bottomLeft, this.rightDir);
-		return i >= 1 && i <= (ConfigurationManager.getInstance().getPortalMaximumSize()) ? i : 0;
+		return i >= 1 && i <= (ConfigurationManagerCommon.getInstance().getPortalMaximumSize()) ? i : 0;
 	}
 
 	private int getDistanceUntilEdgeAboveFrame(BlockPos posIn, Direction directionIn) {
 		BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos();
 
-		for (int i = 0; i <= (ConfigurationManager.getInstance().getPortalMaximumSize()); i++) {
+		for (int i = 0; i <= (ConfigurationManagerCommon.getInstance().getPortalMaximumSize()); i++) {
 			blockpos$mutable.set(posIn).move(directionIn, i);
 			BlockState blockstate = this.level.getBlockState(blockpos$mutable);
 			if (!isEmpty(blockstate)) {
@@ -118,7 +118,7 @@ public class CustomPortalShape {
 	private int calculateHeight() {
 		BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos();
 		int i = this.getDistanceUntilTop(blockpos$mutable);
-		return i >= 2 && i <= (ConfigurationManager.getInstance().getPortalMaximumSize()) && this.hasTopFrame(blockpos$mutable, i) ? i : 0;
+		return i >= 2 && i <= (ConfigurationManagerCommon.getInstance().getPortalMaximumSize()) && this.hasTopFrame(blockpos$mutable, i) ? i : 0;
 	}
 
 	private boolean hasTopFrame(BlockPos.MutableBlockPos mutableIn, int distance) {
@@ -133,7 +133,7 @@ public class CustomPortalShape {
 	}
 
 	private int getDistanceUntilTop(BlockPos.MutableBlockPos mutableIn) {
-		for (int i = 0; i < (ConfigurationManager.getInstance().getPortalMaximumSize() + 2); ++i) {
+		for (int i = 0; i < (ConfigurationManagerCommon.getInstance().getPortalMaximumSize() + 2); ++i) {
 			mutableIn.set(this.bottomLeft).move(Direction.UP, i).move(this.rightDir, -1);
 			if (!FRAME.test(this.level.getBlockState(mutableIn), this.level, mutableIn)) {
 				return i;
@@ -151,25 +151,25 @@ public class CustomPortalShape {
 					return i;
 				}
 
-				if (blockstate.is(ModBusManager.PORTAL)) {
+				if (blockstate.is(ModObjectHolder.block_portal)) {
 					++this.numPortalBlocks;
 				}
 			}
 		}
 
-		return (int) (ConfigurationManager.getInstance().getPortalMaximumSize() + 2);
+		return (int) (ConfigurationManagerCommon.getInstance().getPortalMaximumSize() + 2);
 	}
 
 	private static boolean isEmpty(BlockState stateIn) {
-		return stateIn.isAir() || stateIn.is(ModBusManager.PORTAL);
+		return stateIn.isAir() || stateIn.is(ModObjectHolder.block_portal);
 	}
 
 	public boolean isValid() {
-		return this.bottomLeft != null && this.width >= 1 && this.width <= (ConfigurationManager.getInstance().getPortalMaximumSize()) && this.height >= 2 && this.height <= (ConfigurationManager.getInstance().getPortalMaximumSize());
+		return this.bottomLeft != null && this.width >= 1 && this.width <= (ConfigurationManagerCommon.getInstance().getPortalMaximumSize()) && this.height >= 2 && this.height <= (ConfigurationManagerCommon.getInstance().getPortalMaximumSize());
 	}
 
 	public void createPortalBlocks(Level worldIn, ResourceLocation dimensionIn, BlockPos teleportPos, float pitchIn, float yawIn, int colourIn, boolean playSound, EnumAllowedEntities allowEntities, boolean showParticles) {
-		BlockState blockstate = ModBusManager.PORTAL.defaultBlockState().setValue(BlockPortal.AXIS, this.axis);
+		BlockState blockstate = ModObjectHolder.block_portal.defaultBlockState().setValue(BlockPortal.AXIS, this.axis);
 		
 		BlockPos.betweenClosed(this.bottomLeft,	this.bottomLeft.relative(Direction.UP, this.height - 1).relative(this.rightDir, this.width - 1)).forEach((pos) -> {
 			if (!(this.level.getBlockState(pos).getBlock() instanceof BlockPortal)) {

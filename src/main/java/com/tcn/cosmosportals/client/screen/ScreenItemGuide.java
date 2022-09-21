@@ -15,7 +15,7 @@ import com.tcn.cosmosportals.CosmosPortalsReference;
 import com.tcn.cosmosportals.client.screen.button.GuideButton;
 import com.tcn.cosmosportals.client.screen.button.GuideChangeButton;
 import com.tcn.cosmosportals.core.item.ItemPortalGuide;
-import com.tcn.cosmosportals.core.management.ModBusManager;
+import com.tcn.cosmosportals.core.management.ModObjectHolder;
 import com.tcn.cosmosportals.core.management.NetworkManager;
 import com.tcn.cosmosportals.core.network.PacketGuideUpdate;
 
@@ -64,7 +64,7 @@ public class ScreenItemGuide extends Screen {
 	private final boolean pageTurnSounds;
 
 	public ScreenItemGuide(boolean pageTurnSoundsIn, UUID playerUUIDIn, ItemStack stackIn) {
-		super(ComponentHelper.locComp("cosmosportals.guide.heading"));
+		super(ComponentHelper.title("cosmosportals.guide.heading"));
 		
 		this.pageTurnSounds = pageTurnSoundsIn;
 		this.stack = stackIn;
@@ -116,8 +116,8 @@ public class ScreenItemGuide extends Screen {
 
 		this.drawRenderableWidgets();
 
-		FONT.drawString(poseStack, font, screen_coords, 23, 10, true, ComponentHelper.locComp(ComponentColour.BLACK, false, "cosmosportals.guide.page", Integer.toString(this.currPage)));
-		FONT.drawString(poseStack, font, screen_coords, 76, 10, true, ComponentHelper.locComp(ComponentColour.BLACK, false, true, "cosmosportals.guide.heading"));
+		FONT.drawString(poseStack, font, screen_coords, 23, 10, true, ComponentHelper.style2(ComponentColour.BLACK, "cosmosportals.guide.page", Integer.toString(this.currPage)));
+		FONT.drawString(poseStack, font, screen_coords, 76, 10, true, ComponentHelper.style(ComponentColour.BLACK, "underline", "cosmosportals.guide.heading"));
 		
 		if (this.currPage == 0) {
 			FONT.drawWrappedStringBR(poseStack, font, screen_coords, 104, -4, 0, ComponentColour.BLACK.dec(), ComponentHelper.locString("cosmosportals.guide.one_body")
@@ -125,23 +125,23 @@ public class ScreenItemGuide extends Screen {
 			
 			FONT.drawCenteredString(poseStack, font, screen_coords, 104, 75, ComponentColour.BLACK.dec(), ComponentHelper.locString(Value.UNDERLINE, "cosmosportals.guide.one_body_heading"), false);
 			
-			FONT.drawString(poseStack, font, screen_coords, 30, 120, true, ComponentHelper.locComp(ComponentColour.POCKET_PURPLE_LIGHT, false, "cosmosportals.guide.two_heading"));
-			FONT.drawString(poseStack, font, screen_coords, 173, 120, true, ComponentHelper.locComp(ComponentColour.POCKET_PURPLE_LIGHT, false, "1"));
+			FONT.drawString(poseStack, font, screen_coords, 30, 120, true, ComponentHelper.style(ComponentColour.POCKET_PURPLE_LIGHT, "cosmosportals.guide.two_heading"));
+			FONT.drawString(poseStack, font, screen_coords, 173, 120, true, ComponentHelper.style(ComponentColour.POCKET_PURPLE_LIGHT, "1"));
 			
-			FONT.drawString(poseStack, font, screen_coords, 30, 130, true, ComponentHelper.locComp(ComponentColour.CYAN, false, "cosmosportals.guide.three_heading"));
-			FONT.drawString(poseStack, font, screen_coords, 161, 130, true, ComponentHelper.locComp(ComponentColour.CYAN, false, "2-5"));
+			FONT.drawString(poseStack, font, screen_coords, 30, 130, true, ComponentHelper.style(ComponentColour.CYAN, "cosmosportals.guide.three_heading"));
+			FONT.drawString(poseStack, font, screen_coords, 161, 130, true, ComponentHelper.style(ComponentColour.CYAN, "2-5"));
 			
-			FONT.drawString(poseStack, font, screen_coords, 30, 140, true, ComponentHelper.locComp(ComponentColour.LIGHT_BLUE, false, "cosmosportals.guide.four_heading"));
-			FONT.drawString(poseStack, font, screen_coords, 161, 140, true, ComponentHelper.locComp(ComponentColour.LIGHT_BLUE, false, "6-7"));
+			FONT.drawString(poseStack, font, screen_coords, 30, 140, true, ComponentHelper.style(ComponentColour.LIGHT_BLUE, "cosmosportals.guide.four_heading"));
+			FONT.drawString(poseStack, font, screen_coords, 161, 140, true, ComponentHelper.style(ComponentColour.LIGHT_BLUE, "6-7"));
 			
-			FONT.drawString(poseStack, font, screen_coords, 30, 150, true, ComponentHelper.locComp(ComponentColour.GREEN, false, "cosmosportals.guide.five_heading"));
-			FONT.drawString(poseStack, font, screen_coords, 155, 150, true, ComponentHelper.locComp(ComponentColour.GREEN, false, "8-12"));
+			FONT.drawString(poseStack, font, screen_coords, 30, 150, true, ComponentHelper.style(ComponentColour.GREEN, "cosmosportals.guide.five_heading"));
+			FONT.drawString(poseStack, font, screen_coords, 155, 150, true, ComponentHelper.style(ComponentColour.GREEN, "8-12"));
 			
-			FONT.drawString(poseStack, font, screen_coords, 30, 160, true, ComponentHelper.locComp(ComponentColour.DARK_GREEN, false, "cosmosportals.guide.six_heading"));
-			FONT.drawString(poseStack, font, screen_coords, 149, 160, true, ComponentHelper.locComp(ComponentColour.DARK_GREEN, false, "13-15"));
+			FONT.drawString(poseStack, font, screen_coords, 30, 160, true, ComponentHelper.style(ComponentColour.DARK_GREEN, "cosmosportals.guide.six_heading"));
+			FONT.drawString(poseStack, font, screen_coords, 149, 160, true, ComponentHelper.style(ComponentColour.DARK_GREEN, "13-15"));
 			
-			FONT.drawString(poseStack, font, screen_coords, 30, 170, true, ComponentHelper.locComp(ComponentColour.RED, false, "cosmosportals.guide.seven_tab"));
-			FONT.drawString(poseStack, font, screen_coords, 167, 170, true, ComponentHelper.locComp(ComponentColour.RED, false, "16"));
+			FONT.drawString(poseStack, font, screen_coords, 30, 170, true, ComponentHelper.style(ComponentColour.RED, "cosmosportals.guide.seven_tab"));
+			FONT.drawString(poseStack, font, screen_coords, 167, 170, true, ComponentHelper.style(ComponentColour.RED, "16"));
 			
 			FONT.drawCenteredString(poseStack, font, screen_coords, 104, 174, ComponentColour.GRAY.dec(), ComponentHelper.locString("[ ", "cosmosportals.guide.foot_one", " ]"), false);
 		} 
@@ -152,10 +152,10 @@ public class ScreenItemGuide extends Screen {
 			FONT.drawWrappedStringBR(poseStack, font, screen_coords, 104, 4, 0, ComponentColour.BLACK.dec(), ComponentHelper.locString("cosmosportals.guide.two_body_one"));
 			FONT.drawCenteredString(poseStack, font, screen_coords, 104, 65, ComponentColour.POCKET_PURPLE_LIGHT.dec(), ComponentHelper.locString(Value.UNDERLINE, "cosmosportals.guide.two_body_two"), false);
 			
-			FONT.drawString(poseStack, font, screen_coords, 25, 110, true, ComponentHelper.locComp(ComponentColour.CYAN, false, "cosmosportals.guide.two_sub_one"));
-			FONT.drawString(poseStack, font, screen_coords, 25, 120, true, ComponentHelper.locComp(ComponentColour.LIGHT_BLUE, false, "cosmosportals.guide.two_sub_two"));
-			FONT.drawString(poseStack, font, screen_coords, 25, 130, true, ComponentHelper.locComp(ComponentColour.GREEN, false, "cosmosportals.guide.two_sub_three"));
-			FONT.drawString(poseStack, font, screen_coords, 25, 140, true, ComponentHelper.locComp(ComponentColour.DARK_GREEN, false, "cosmosportals.guide.two_sub_four"));
+			FONT.drawString(poseStack, font, screen_coords, 25, 110, true, ComponentHelper.style(ComponentColour.CYAN, "cosmosportals.guide.two_sub_one"));
+			FONT.drawString(poseStack, font, screen_coords, 25, 120, true, ComponentHelper.style(ComponentColour.LIGHT_BLUE, "cosmosportals.guide.two_sub_two"));
+			FONT.drawString(poseStack, font, screen_coords, 25, 130, true, ComponentHelper.style(ComponentColour.GREEN, "cosmosportals.guide.two_sub_three"));
+			FONT.drawString(poseStack, font, screen_coords, 25, 140, true, ComponentHelper.style(ComponentColour.DARK_GREEN, "cosmosportals.guide.two_sub_four"));
 			
 			FONT.drawWrappedStringBR(poseStack, font, screen_coords, 104, 140, 0, ComponentColour.BLACK.dec(), ComponentHelper.locString("cosmosportals.guide.two_body_three"));
 			
@@ -324,43 +324,43 @@ public class ScreenItemGuide extends Screen {
 		int[] screen_coords = CosmosUISystem.getScreenCoords(this, 202, 225);
 		
 		if (this.buttonExit.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.RED, false, "cosmosportals.guide.button_one"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.RED, "cosmosportals.guide.button_one"), mouseX, mouseY);
 		} else if (this.buttonHome.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.GREEN, false, "cosmosportals.guide.button_two"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.GREEN, "cosmosportals.guide.button_two"), mouseX, mouseY);
 		} 
 		
 		else if (this.buttonNextPage.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.guide.button_three"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.guide.button_three"), mouseX, mouseY);
 		} else if (this.buttonPreviousPage.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.LIGHT_GRAY, false, "cosmosportals.guide.button_four"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.guide.button_four"), mouseX, mouseY);
 		} 
 		
 		else if (this.tabIntroduction.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.GRAY, true, "cosmosportals.guide.two_heading"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.GRAY, "bold", "cosmosportals.guide.two_heading"), mouseX, mouseY);
 		} else if (this.tabPortals.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.CYAN, true, "cosmosportals.guide.three_heading"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.CYAN, "bold", "cosmosportals.guide.three_heading"), mouseX, mouseY);
 		} else if (this.tabItems.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.LIGHT_BLUE, true, "cosmosportals.guide.four_heading"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.LIGHT_BLUE, "bold", "cosmosportals.guide.four_heading"), mouseX, mouseY);
 		} else if (this.tabConfiguration.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.GREEN, true, "cosmosportals.guide.five_heading"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.GREEN, "bold", "cosmosportals.guide.five_heading"), mouseX, mouseY);
 		}  else if (this.tabRecipes.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.DARK_GREEN, true, "cosmosportals.guide.six_heading"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.DARK_GREEN, "bold", "cosmosportals.guide.six_heading"), mouseX, mouseY);
 		} else if (this.tabCredits.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.RED, true, "cosmosportals.guide.seven_tab"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.RED, "bold", "cosmosportals.guide.seven_tab"), mouseX, mouseY);
 		}
 		
 		/*
 		else if (this.tabPlaceholder.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.BLUE, true, "cosmosportals.guide.four_heading"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.BLUE, true, "cosmosportals.guide.four_heading"), mouseX, mouseY);
 		} else if (this.tabPlaceholder2.isMouseOver(mouseX, mouseY)) {
-			this.renderTooltip(poseStack, ComponentHelper.locComp(ComponentColour.GRAY, true, "cosmosportals.guide.seven_heading"), mouseX, mouseY);
+			this.renderTooltip(poseStack, ComponentHelper.style(ComponentColour.GRAY, true, "cosmosportals.guide.seven_heading"), mouseX, mouseY);
 		}
 		*/
 		
 		else if (this.uiModeButton.isMouseOver(mouseX, mouseY)) {
 			Component[] comp = new Component[] { 
-				ComponentHelper.locComp(ComponentColour.WHITE, false, "cosmoslibrary.gui.ui_mode.info"),
-				ComponentHelper.locComp(ComponentColour.GRAY, false, "cosmoslibrary.gui.ui_mode.value").append(this.getUIMode().getColouredComp())
+				ComponentHelper.style(ComponentColour.WHITE, "cosmoslibrary.gui.ui_mode.info"),
+				ComponentHelper.style(ComponentColour.GRAY, "cosmoslibrary.gui.ui_mode.value").append(this.getUIMode().getColouredComp())
 			};
 				
 				this.renderComponentTooltip(poseStack, Arrays.asList(comp), mouseX, mouseY);
@@ -389,7 +389,7 @@ public class ScreenItemGuide extends Screen {
 	protected void drawRenderableWidgets() {
 		this.clearWidgets();
 		
-		this.uiModeButton = this.addRenderableWidget(new CosmosButtonUIMode(this.getUIMode(), this.width / 2 + 71, this.height / 2 - 90, true, true, ComponentHelper.locComp(""), (button) -> { this.changeUIMode(); } ));
+		this.uiModeButton = this.addRenderableWidget(new CosmosButtonUIMode(this.getUIMode(), this.width / 2 + 71, this.height / 2 - 90, true, true, ComponentHelper.empty(), (button) -> { this.changeUIMode(); } ));
 		
 		this.buttonNextPage = this.addRenderableWidget(new GuideChangeButton(this.width / 2 + 58, this.height / 2 + 92, true, (p_214159_1_) -> { this.nextPage(); }, this.pageTurnSounds, this.getTexture()));
 		this.buttonPreviousPage = this.addRenderableWidget(new GuideChangeButton(this.width / 2 - 79, this.height / 2 + 92, false, (p_214158_1_) -> { this.previousPage(); }, this.pageTurnSounds, this.getTexture()));
@@ -559,16 +559,16 @@ public class ScreenItemGuide extends Screen {
 			new ItemStack(Items.COPPER_INGOT), //  3
 			new ItemStack(Items.ENDER_PEARL), //  4
 
-			new ItemStack(ModBusManager.COSMIC_MATERIAL), // 5
-			new ItemStack(ModBusManager.COSMIC_INGOT), // 6
-			new ItemStack(ModBusManager.COSMIC_GEM), // 7
-			new ItemStack(ModBusManager.COSMIC_PEARL), // 8
+			new ItemStack(ModObjectHolder.item_cosmic_material), // 5
+			new ItemStack(ModObjectHolder.item_cosmic_ingot), // 6
+			new ItemStack(ModObjectHolder.item_cosmic_gem), // 7
+			new ItemStack(ModObjectHolder.item_cosmic_pearl), // 8
 			
-			new ItemStack(ModBusManager.DIMENSION_CONTAINER), // 9
+			new ItemStack(ModObjectHolder.item_dimension_container_unlinked), // 9
 
-			new ItemStack(ModBusManager.COSMIC_BLOCK), // 10
-			new ItemStack(ModBusManager.PORTAL_FRAME), // 11
-			new ItemStack(ModBusManager.PORTAL_DOCK), // 12
+			new ItemStack(ModObjectHolder.block_cosmic), // 10
+			new ItemStack(ModObjectHolder.block_portal_frame), // 11
+			new ItemStack(ModObjectHolder.block_portal_dock), // 12
 		};
 		
 		if (grid_ref == 0) {

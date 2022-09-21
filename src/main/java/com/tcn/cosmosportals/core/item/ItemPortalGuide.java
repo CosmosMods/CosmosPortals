@@ -1,7 +1,6 @@
 package com.tcn.cosmosportals.core.item;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -36,7 +35,7 @@ public class ItemPortalGuide extends Item {
 			if (playerIn.getDisplayName().getString().equals("TheCosmicNebula_")) {
 				this.openGUI(playerIn);
 			} else {
-				playerIn.sendMessage(ComponentHelper.locComp(ComponentColour.RED, false, "This feature is a WIP, sorry for the inconvenience."), UUID.randomUUID());
+				playerIn.sendSystemMessage(ComponentHelper.style(ComponentColour.RED, "This feature is a WIP, sorry for the inconvenience."));
 			}
 		}
 		

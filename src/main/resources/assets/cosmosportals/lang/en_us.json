@@ -16,7 +16,8 @@
 	
 	"itemGroup.cosmosportals": "Cosmos Portals",
 	
-	"item.cosmosportals.item_dimension_container": "Dimension Container",
+	"item.cosmosportals.item_dimension_container": "Linked Dimension Container",
+	"item.cosmosportals.item_dimension_container_unlinked": "Unlinked Dimension Container",
 	"item.cosmosportals.item_cosmic_material": "Cosmic Material",
 	"item.cosmosportals.item_cosmic_ingot": "Cosmic Ingot",
 	"item.cosmosportals.item_cosmic_pearl": "Cosmic Pearl",
@@ -31,6 +32,8 @@
 	"block.cosmosportals.block_cosmic_ore": "Cosmic Ore",
 	"block.cosmosportals.block_deepslate_cosmic_ore": "Deepslate Cosmic Ore",
 	"block.cosmosportals.block_cosmic": "Cosmic Block",
+	
+	"block.cosmosportals.block_container_workbench": "Container Workbench",
 
 	"cosmosportals.modid": "Cosmos Portals",
 	"cosmosportals.version": "[1.16.5-1.0.40]",
@@ -72,11 +75,17 @@
 	"cosmosportals.gui.config.particles": "Portal Particles",
 	"cosmosportals.gui.config.particles_info": "Whether or not Portal Particle Effects are rendered",
 	
+	"cosmosportals.gui.config.label_distance": "Label Maximum Distance",
+	"cosmosportals.gui.config.label_distance_info": "How far away Portal Labels will still render",
+	"cosmosportals.gui.config.label_distance_slide": "Maximum Label Distance:",
+	
 	"cosmosportals.gui.config.message.restart": "A restart is required for this option to take effect",
 	
 	"cosmosportals.gui.done": "Done",
 	
 	"cosmosportals.gui.dock": "Portal Dock",
+	
+	"cosmosportals.gui.workbench": "Container Workbench",
 	
 	"cosmosportals.gui.dock.label_info": "Show or Hide Portal Dimension Labels.",
 	"cosmosportals.gui.dock.label_value": "Labels are currently:",
@@ -96,10 +105,88 @@
 	"cosmosportals.gui.dock.particle_shown": "Shown",
 	"cosmosportals.gui.dock.particle_hidden": "Hidden",
 	
+	"cosmosportals.gui.dock.settings_title" :"Dock Settings:",
+	"cosmosportals.gui.dock.settings": "Open the Settings Menu.",
+	
+	"cosmosportals.gui.button.text.clear": "Clear the Text Field.",
+	"cosmosportals.gui.button.text.set": "Set new Display name.",
+	"cosmosportals.gui.button.text.reset": "Reset Display name.",
+	
+	"cosmosportals.ui.help.container": "Dimension Container",
+	"cosmosportals.ui.help.container_one": "This is an indicator of if this Portal",
+	"cosmosportals.ui.help.container_two": "has a Dimension Container.",
+	
+	"cosmosportals.ui.help.container_item": "Dimension Container Item",
+	"cosmosportals.ui.help.container_item_one": "This shows the actual Dimension Container",
+	"cosmosportals.ui.help.container_item_two": "that is stored inside this Dock.",
+	
+	"cosmosportals.ui.help.button_label": "Portal Label Button",
+	"cosmosportals.ui.help.button_label_one": "This Button toggles in-world Portal",
+	"cosmosportals.ui.help.button_label_two": "Labels on or off.",
+	
+	"cosmosportals.ui.help.button_sounds": "Sounds Button",
+	"cosmosportals.ui.help.button_sounds_one": "This Button toggles in-world Portal",
+	"cosmosportals.ui.help.button_sounds_two": "Sounds on or off.",
+	
+	"cosmosportals.ui.help.button_entity": "Entity Filter Button",
+	"cosmosportals.ui.help.button_entity_one": "This Button cycles through the Entity Filter,",
+	"cosmosportals.ui.help.button_entity_two": "which allows you to choose what Entities",
+	"cosmosportals.ui.help.button_entity_three": "are able to use this Portal.",
+	
+	"cosmosportals.ui.help.button_effects": "Particle Effects Button",
+	"cosmosportals.ui.help.button_effects_one": "This Button toggles in-world Portal",
+	"cosmosportals.ui.help.button_effects_two": "Particle Effects on or off.",
+	
+	"cosmosportals.ui.help.button_settings": "Settings Button",
+	"cosmosportals.ui.help.button_settings_one": "This Button opens and closes the Portal",
+	"cosmosportals.ui.help.button_settings_two": "Dock settings.",
+	
+	"cosmosportals.ui.help.label": "Portal Label",
+	"cosmosportals.ui.help.label_one": "This is a visual representation of what",
+	"cosmosportals.ui.help.label_two": "Dimension this Portal is linked to,",
+	"cosmosportals.ui.help.label_three": "or a custom name you choose.",
+	
+	"cosmosportals.ui.help.name": "Portal Label Name",
+	"cosmosportals.ui.help.name_one": "Enter a custom name in this Text Box",
+	"cosmosportals.ui.help.name_two": "and that name will be displayed instead",
+	"cosmosportals.ui.help.name_three": "of the Dimension name.",
+	
+	"cosmosportals.ui.help.clear": "Text Box Clear Button",
+	"cosmosportals.ui.help.clear_one": "Press this button to clear the",
+	"cosmosportals.ui.help.clear_two": "Text Box.",
+	
+	"cosmosportals.ui.help.apply": "Portal Name Set Button",
+	"cosmosportals.ui.help.apply_one": "Press this button to set the name",
+	"cosmosportals.ui.help.apply_two": "to what is in the Text Box, or",
+	"cosmosportals.ui.help.apply_three": "if empty, reset the name.",
+	
+	"cosmosportals.ui.help.colour": "Portal Colour Button",
+	"cosmosportals.ui.help.colour_one": "Press this button to cycle the Portal",
+	"cosmosportals.ui.help.colour_two": "Colour, with all 16 of Minecraft's",
+	"cosmosportals.ui.help.colour_three": "colours available to choose from.",
+	
+	"cosmosportals.ui.help.workbench.container": "Input Containers",
+	"cosmosportals.ui.help.workbench.container_one": "Put a stack of containers here as when",
+	"cosmosportals.ui.help.workbench.container_two": "you copy a Container, you require an",
+	"cosmosportals.ui.help.workbench.container_three": "unlinked Container.",
+	
+	"cosmosportals.ui.help.workbench.container_linked": "Container to copy",
+	"cosmosportals.ui.help.workbench.container_linked_one": "Place the Container you wish to copy",
+	"cosmosportals.ui.help.workbench.container_linked_two": "in this slot.",
+	
+	"cosmosportals.ui.help.workbench.container_copied": "New Container",
+	"cosmosportals.ui.help.workbench.container_copied_one": "This is where the fresh copy of your",
+	"cosmosportals.ui.help.workbench.container_copied_two": "Container will appear.",
+	
 	"cosmosportals.item_info.container": "An item that stores a Positon and Dimension to be used in a Portal.",
 	"cosmosportals.item_info.container_one": "This item will store your Position and the Dimension you are in when used.",
-	"cosmosportals.item_info.container_two": "To record: simply shift-right-click.",
-	"cosmosportals.item_info.container_three": "To use: Shift-right-click on a Portal Dock.",
+	"cosmosportals.item_info.container_two": "To record: simply Sneak-right-click.",
+	
+	"cosmosportals.item_info.container_linked": "A Dimension Container that has been used, and is storing information.",
+	"cosmosportals.item_info.container_linked_one": "To use: Sneak-right-click on a Portal Dock.",
+	"cosmosportals.item_info.container_linked_two": "To clear: Craft this item by itself.",
+	"cosmosportals.item_info.container_linked_three": "This container has stored information:",
+	"cosmosportals.item_info.container_linked_error": "This container is linked but has no information!",
 	
 	"cosmosportals.item_info.container_position": "Recorded Position: ",
 	"cosmosportals.item_info.container_dimension": "Recorded Dimension: ",
@@ -115,9 +202,13 @@
 	
 	"cosmosportals.block_info.dock": "Cosmic Portal Dock",
 	"cosmosportals.block_info.dock_one": "Portal Controller. Used to summon a Portal.",
-	"cosmosportals.block_info.dock_two": "To use: Shift-right-click an activated Dimension Container.",
+	"cosmosportals.block_info.dock_two": "To use: Sneak-right-click with a Linked Dimension Container.",
 	"cosmosportals.block_info.dock_three": "Has a GUI, can be configured.",
 	
+	"cosmosportals.block_info.workbench": "Container Workbench",
+	"cosmosportals.block_info.workbench_one": "Used to duplicate Dimension Containers.",
+	"cosmosportals.block_info.workbench_two": "To use: Right-click to to open the UI.",
+	"cosmosportals.block_info.workbench_limit": "You must provide unlinked Dimension Containers.",
 	
 	"cosmosportals.guide.button_one": "Exit",
 	"cosmosportals.guide.button_two": "Home",

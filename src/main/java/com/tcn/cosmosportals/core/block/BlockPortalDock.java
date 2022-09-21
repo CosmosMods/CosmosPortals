@@ -1,17 +1,18 @@
 package com.tcn.cosmosportals.core.block;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
 import com.tcn.cosmoslibrary.common.block.CosmosEntityBlock;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDock;
-import com.tcn.cosmosportals.core.management.ModBusManager;
+import com.tcn.cosmosportals.core.management.ModObjectHolder;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -38,14 +38,9 @@ public class BlockPortalDock extends CosmosEntityBlock {
 	
 	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level levelIn, BlockState stateIn, BlockEntityType<T> entityTypeIn) {
-		return createTicker(levelIn, entityTypeIn, ModBusManager.DOCK_BLOCK_ENTITY_TYPE);
+		return createTicker(levelIn, entityTypeIn, ModObjectHolder.tile_portal_dock);
 	}
-
-	@Nullable
-	public <T extends BlockEntity> GameEventListener getListener(Level p_153210_, T p_153211_) {
-		return null;
-	}
-
+	
 	@Nullable
 	protected static <T extends BlockEntity> BlockEntityTicker<T> createTicker(Level levelIn, BlockEntityType<T> entityTypeIn, BlockEntityType<? extends BlockEntityPortalDock> entityIn) {
 		return createTickerHelper(entityTypeIn, entityIn, BlockEntityPortalDock::tick);
@@ -70,9 +65,37 @@ public class BlockPortalDock extends CosmosEntityBlock {
 		
 		return InteractionResult.PASS;
 	}
-	
+
+	@Override
+	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+		
+		if (tileEntity instanceof BlockEntityPortalDock) {
+			((BlockEntityPortalDock) tileEntity).onPlace(state, worldIn, pos, oldState, isMoving);
+		}
+	}
+
+	@Override
+	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+		
+		if (tileEntity instanceof BlockEntityPortalDock) {
+			((BlockEntityPortalDock) tileEntity).setPlacedBy(worldIn, pos, state, placer, stack);
+		}
+	}
+
+	@Override
+	public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+		BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+		
+		if (tileEntity instanceof BlockEntityPortalDock) {
+			((BlockEntityPortalDock) tileEntity).playerWillDestroy(worldIn, pos, state, player);
+		}
+	}
+
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level levelIn, BlockPos posIn, Random randIn) {
+	@Override
+	public void animateTick(BlockState stateIn, Level levelIn, BlockPos posIn, RandomSource randIn) {
 		BlockEntity tileEntity = levelIn.getBlockEntity(posIn);
 		
 		if (tileEntity instanceof BlockEntityPortalDock) {
@@ -93,5 +116,4 @@ public class BlockPortalDock extends CosmosEntityBlock {
 	public RenderShape getRenderShape(BlockState stateIn) {
 		return RenderShape.MODEL;
 	}
-
 }

@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"DCD",
+		"ISI",
+		"III"
+	],
+	"key": {
+		"C": {
+			"item": "cosmosportals:item_dimension_container_unlinked"
+		},
+		"S": {
+			"item": "minecraft:smithing_table"
+		},
+		"I": {
+			"item": "cosmosportals:item_cosmic_ingot"
+		},
+		"D": {
+			"item": "cosmosportals:item_cosmic_material"
+		}
+	},
+	"result": {
+		"item": "cosmosportals:block_container_workbench"
+	}
+}
