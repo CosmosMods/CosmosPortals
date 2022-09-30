@@ -1,3 +1,5 @@
+![Repo Size](https://img.shields.io/github/repo-size/TheCosmicNebula/CosmosPortals?label=REPO%20SIZE&style=for-the-badge) ![Open Issues](https://img.shields.io/github/issues-raw/TheCosmicNebula/CosmosPortals?style=for-the-badge) ![Closed Issues](https://img.shields.io/github/issues-closed/TheCosmicNebula/CosmosPortals?color=green&style=for-the-badge) 
+
 # CosmosPortals
 Due to having a similiar idea to XCompWiz's Mystcraft Portals, I have created Cosmos Portals, a small mod that adds configurable Portals to Minecraft. Currently using MinecraftForge 1.19.2.
 
@@ -31,7 +33,7 @@ This repo does not have a licence. This means that by default, it is All Rights 
 
 ## Development Team:
 - TheCosmicNebula_ (Main Author)
-- 
+
 ### Development Team Applications:
  - Please feel free to email: thecosmicnebula_@outlook.com
 
