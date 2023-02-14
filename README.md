@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/badge/VERSION-1.19.2-informational?style=for-the-badge) ![Repo Size](https://img.shields.io/github/repo-size/TheCosmicNebula/CosmosPortals?label=REPO%20SIZE&style=for-the-badge) ![Open Issues](https://img.shields.io/github/issues/TheCosmicNebula/CosmosPortals?style=for-the-badge) ![Closed Issues](https://img.shields.io/github/issues-closed/TheCosmicNebula/CosmosPortals?color=green&style=for-the-badge) 
+![Version](https://img.shields.io/badge/VERSION-1.19.2-success?style=for-the-badge) ![Repo Size](https://img.shields.io/github/repo-size/TheCosmicNebula/CosmosPortals?label=REPO%20SIZE&style=for-the-badge) ![Open Issues](https://img.shields.io/github/issues/TheCosmicNebula/CosmosPortals?style=for-the-badge) ![Closed Issues](https://img.shields.io/github/issues-closed/TheCosmicNebula/CosmosPortals?color=green&style=for-the-badge) 
 
 # CosmosPortals
 Due to having a similiar idea to XCompWiz's Mystcraft Portals, I have created Cosmos Portals, a small mod that adds configurable Portals to Minecraft. Currently using MinecraftForge 1.19.2.
