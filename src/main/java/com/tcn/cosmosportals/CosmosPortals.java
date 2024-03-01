@@ -5,6 +5,7 @@ import com.tcn.cosmosportals.core.management.ConfigurationManagerCommon;
 import com.tcn.cosmosportals.core.management.CoreSoundManager;
 import com.tcn.cosmosportals.core.management.ModBusManager;
 import com.tcn.cosmosportals.core.management.NetworkManager;
+import com.tcn.cosmosportals.core.management.WorldGenManager;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -26,20 +27,21 @@ public class CosmosPortals {
 	public CosmosPortals() {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigurationManagerCommon.spec, "cosmos-portals-common.toml");
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		
+
+		WorldGenManager.register(bus);
 		ModBusManager.register(bus);
 		CoreSoundManager.register(bus);
 		
 		bus.addListener(this::onFMLCommonSetup);
 		bus.addListener(this::onFMLClientSetup);
-
+		
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	public void onFMLCommonSetup(final FMLCommonSetupEvent event) {
 		CONSOLE = new CosmosConsoleManager(CosmosPortals.MOD_ID, ConfigurationManagerCommon.getInstance().getDebugMessage(), ConfigurationManagerCommon.getInstance().getInfoMessage());
 		
-		event.enqueueWork(() -> {			
+		event.enqueueWork(() -> {
 			NetworkManager.register();
 		});
 		

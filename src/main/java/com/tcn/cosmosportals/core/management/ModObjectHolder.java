@@ -2,9 +2,11 @@ package com.tcn.cosmosportals.core.management;
 
 import com.tcn.cosmosportals.client.container.ContainerContainerWorkbench;
 import com.tcn.cosmosportals.client.container.ContainerPortalDock;
+import com.tcn.cosmosportals.client.container.ContainerPortalDockUpgraded;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityContainerWorkbench;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortal;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDock;
+import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDockUpgraded;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
@@ -55,6 +57,13 @@ public class ModObjectHolder {
 	public static final BlockEntityType<BlockEntityPortalDock> tile_portal_dock = null;
 	@ObjectHolder(registryName = "minecraft:menu", value = "cosmosportals:container_portal_dock")
 	public static final MenuType<ContainerPortalDock> container_portal_dock = null;
+
+	@ObjectHolder(registryName = "minecraft:block", value = "cosmosportals:block_portal_dock_upgraded")
+	public static final Block block_portal_dock_upgraded = null;
+	@ObjectHolder(registryName = "minecraft:block_entity_type", value = "cosmosportals:tile_portal_dock_upgraded")
+	public static final BlockEntityType<BlockEntityPortalDockUpgraded> tile_portal_dock_upgraded = null;
+	@ObjectHolder(registryName = "minecraft:menu", value = "cosmosportals:container_portal_dock_upgraded")
+	public static final MenuType<ContainerPortalDockUpgraded> container_portal_dock_upgraded = null;
 
 	@ObjectHolder(registryName = "minecraft:block", value = "cosmosportals:block_container_workbench")
 	public static final Block block_container_workbench = null;

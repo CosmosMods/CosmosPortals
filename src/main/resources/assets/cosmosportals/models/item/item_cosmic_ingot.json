@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cosmosportals:items/cosmic_ingot"
+        "layer0": "cosmosportals:item/cosmic_ingot"
     }
 }

@@ -1,42 +1,42 @@
 {
 	"multipart": [
-		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "false", "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/0" 	 	   } },
-		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "false", "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/0",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "false", "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/0" 	 	   } },
+		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "false", "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/0",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "true",  "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/1" 	 	   } },
-		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "true",  "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/1",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "true",  "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/1" 	 	   } },
+		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "true",  "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/1",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "false", "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/2" 	 	   } },
-		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "false", "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/2",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "false", "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/2" 	 	   } },
+		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "false", "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/2",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "true",  "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/3" 		   } },
-		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "true",  "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/3",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "true",  "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/3" 		   } },
+		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "true",  "left": "false", "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/3",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "true",  "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/4" 		   } },
-		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "true",  "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/4",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "true",  "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/4" 		   } },
+		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "true",  "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/4",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "true",  "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/5" 		   } },
-		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "true",  "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/5",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "true",  "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/5" 		   } },
+		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "true",  "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/5",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "true",  "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/6" 		   } },
-		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "true",  "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/6",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "false", "up": "true",  "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/6" 		   } },
+		{ "when": { "AND": [ { "axis": "z", "down": "false", "up": "true",  "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/6",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "false", "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/7" 		   } },
-		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "false", "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/7",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "false", "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/7" 		   } },
+		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "false", "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/7",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "false", "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/8"           } },
-		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "false", "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/8",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "false", "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/8"           } },
+		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "false", "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/8",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "false", "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/9"           } },
-		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "false", "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/9",  "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "false", "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/9"           } },
+		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "false", "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/9",  "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "true",  "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/10"          } },
-		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "true",  "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:/block/portal/10", "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "true",  "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/10"          } },
+		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "true",  "left": "true",  "right": "false" } ] }, "apply": { "model": "cosmosportals:block/portal/10", "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "true",  "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/11"          } },
-		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "true",  "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/11", "y": 90 } },
+		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "true",  "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/11"          } },
+		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "true",  "left": "false", "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/11", "y": 90 } },
 		
-		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "true",  "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/12"          } },
-		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "true",  "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:/block/portal/12", "y": 90 } }
+		{ "when": { "AND": [ { "axis": "x", "down": "true",  "up": "true",  "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/12"          } },
+		{ "when": { "AND": [ { "axis": "z", "down": "true",  "up": "true",  "left": "true",  "right": "true"  } ] }, "apply": { "model": "cosmosportals:block/portal/12", "y": 90 } }
 	]
 }

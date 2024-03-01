@@ -1,6 +1,6 @@
 {
     "parent": "cosmoslibrary:block/modblock",
     "textures": {
-    	"all": "cosmosportals:blocks/deepslate_cosmic_ore"
+    	"all": "cosmosportals:block/deepslate_cosmic_ore"
     }
 }

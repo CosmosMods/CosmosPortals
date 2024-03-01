@@ -1,5 +1,7 @@
 package com.tcn.cosmosportals.client.container;
 
+import java.util.ArrayList;
+
 import com.tcn.cosmoslibrary.client.container.CosmosContainerMenuBlockEntity;
 import com.tcn.cosmoslibrary.client.container.slot.SlotRestrictedAccess;
 import com.tcn.cosmoslibrary.client.container.slot.SlotSpecifiedItem;
@@ -33,7 +35,7 @@ public class ContainerContainerWorkbench extends CosmosContainerMenuBlockEntity 
 		super(ModObjectHolder.container_container_workbench, indexIn, playerInventoryIn, accessIn, posIn);
 		this.copy = contentsIn;
 		
-		this.addSlot(new SlotSpecifiedItem(contentsIn, 0, 30, 15, ModObjectHolder.item_dimension_container_unlinked, 16) {
+		this.addSlot(new SlotSpecifiedItem(contentsIn, 0, 34, 46, ModObjectHolder.item_dimension_container_unlinked, 16) {
 			@Override
 			public void setChanged() {
 				super.setChanged();
@@ -43,7 +45,7 @@ public class ContainerContainerWorkbench extends CosmosContainerMenuBlockEntity 
 			}
 		});
 		
-		this.addSlot(new SlotSpecifiedItem(contentsIn, 1, 74, 15, ModObjectHolder.item_dimension_container, 1) {
+		this.addSlot(new SlotSpecifiedItem(contentsIn, 1, 78, 46, ModObjectHolder.item_dimension_container, 1) {
 			@Override
 			public void setChanged() {
 				super.setChanged();
@@ -53,7 +55,7 @@ public class ContainerContainerWorkbench extends CosmosContainerMenuBlockEntity 
 			}
 		});
 		
-		this.addSlot(new SlotRestrictedAccess(resultSlot, 0, 126, 15, false, true) {
+		this.addSlot(new SlotRestrictedAccess(resultSlot, 0, 122, 46, false, true) {
 			@Override
 			public void onTake(Player playerIn, ItemStack stackIn) {
 				ContainerContainerWorkbench.this.onTake(playerIn, stackIn);
@@ -63,13 +65,13 @@ public class ContainerContainerWorkbench extends CosmosContainerMenuBlockEntity 
 		/** @Inventory */
 		for (int k = 0; k < 3; ++k) {
 			for (int i1 = 0; i1 < 9; ++i1) {
-				this.addSlot(new Slot(playerInventoryIn, i1 + k * 9 + 9, 6 + i1 * 18, 46 + k * 18));
+				this.addSlot(new Slot(playerInventoryIn, i1 + k * 9 + 9, 6 + i1 * 18, 77 + k * 18));
 			}
 		}
 
 		/** @Actionbar */
 		for (int l = 0; l < 9; ++l) {
-			this.addSlot(new Slot(playerInventoryIn, l, 6 + l * 18, 104));
+			this.addSlot(new Slot(playerInventoryIn, l, 6 + l * 18, 135));
 		}
 		contentsIn.setChanged();
 		this.slotsChanged(this.copy);
@@ -85,9 +87,12 @@ public class ContainerContainerWorkbench extends CosmosContainerMenuBlockEntity 
 	}
 
 	protected void onTake(Player playerIn, ItemStack stackIn) {
-		stackIn.onCraftedBy(playerIn.level, playerIn, stackIn.getCount());
+		stackIn.onCraftedBy(playerIn.level(), playerIn, stackIn.getCount());
 		
-		this.resultSlot.awardUsedRecipes(playerIn);
+		ArrayList<ItemStack> stacks = new ArrayList<ItemStack>();
+		stacks.add(stackIn);
+		
+		this.resultSlot.awardUsedRecipes(playerIn, stacks);
 		if (!this.copy.getItem(1).isEmpty()) {
 			this.shrinkStackInSlot(1);
 		}

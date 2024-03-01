@@ -12,8 +12,8 @@ import com.tcn.cosmosportals.core.management.ModObjectHolder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -25,6 +25,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -89,7 +90,7 @@ public class BlockEntityPortal extends BlockEntity {
 	}
 	
 	public ResourceKey<Level> getDestDimension() {
-		return ResourceKey.create(Registry.DIMENSION_REGISTRY, this.destDimension);
+		return ResourceKey.create(Registries.DIMENSION, this.destDimension);
 	}
 
 	public BlockPos getDestPos() {
@@ -190,14 +191,14 @@ public class BlockEntityPortal extends BlockEntity {
 						float yaw = entityIn.destInfo.getYaw();
 						float pitch = entityIn.destInfo.getPitch();
 
-						if (entityToTeleport.level.dimension().equals(entityIn.getDestDimension())) {
+						if (entityToTeleport.level().dimension().equals(entityIn.getDestDimension())) {
 							if (entityToTeleport instanceof ServerPlayer) {
 								ServerPlayer playerIn = (ServerPlayer) entityToTeleport;
 								
 								if (!playerIn.isShiftKeyDown()) {
 									if (entityIn.allowedEntities.equals(EnumAllowedEntities.ALL) || entityIn.allowedEntities.equals(EnumAllowedEntities.PLAYERS_ONLY)) {
 										if (ConfigurationManagerCommon.getInstance().getPlayPortalTravelSounds() && entityIn.playSound) {
-											playerIn.connection.send(new ClientboundSoundPacket(CoreSoundManager.PORTAL_TRAVEL.get(), SoundSource.AMBIENT, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0.1F, 1, 1));
+											playerIn.connection.send(new ClientboundSoundPacket(CoreSoundManager.PORTAL_TRAVEL.getHolder().get(), SoundSource.AMBIENT, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0.1F, 1, 1));
 										}
 										
 										if (EventFactory.onPortalTravel(playerIn, playerIn.blockPosition(), targetPos, entityIn.destDimension)) {
@@ -219,6 +220,10 @@ public class BlockEntityPortal extends BlockEntity {
 										} else {
 											entityToTeleport.teleportTo(targetPos.getX(), targetPos.getY(), targetPos.getZ());
 										}
+									} else if (entityIn.allowedEntities.equals(EnumAllowedEntities.ITEMS_ONLY)) {
+										if (entityToTeleport instanceof ItemEntity) {
+											entityToTeleport.teleportTo(targetPos.getX(), targetPos.getY(), targetPos.getZ());
+										}
 									}
 								}
 							}
@@ -231,7 +236,7 @@ public class BlockEntityPortal extends BlockEntity {
 										CosmosTeleporter teleporter = CosmosTeleporter.createTeleporter(entityIn.getDestDimension(), targetPos, yaw, pitch, false, false, true);
 										
 										if (EventFactory.onPortalTravel(playerIn, playerIn.blockPosition(), targetPos, entityIn.destDimension)) {
-											CosmosTeleportCore.shiftPlayerToDimension(playerIn, teleporter, ConfigurationManagerCommon.getInstance().getPlayPortalTravelSounds() && entityIn.playSound ? CoreSoundManager.PORTAL_TRAVEL.get() : null, 0.1F);
+											CosmosTeleportCore.shiftPlayerToDimension(playerIn, teleporter, ConfigurationManagerCommon.getInstance().getPlayPortalTravelSounds() && entityIn.playSound ? CoreSoundManager.PORTAL_TRAVEL.getHolder().get() : null, 0.1F);
 										}
 									}
 								}
@@ -246,6 +251,10 @@ public class BlockEntityPortal extends BlockEntity {
 												entityToTeleport.changeDimension(ServerLifecycleHooks.getCurrentServer().getLevel(entityIn.getDestDimension()), teleporter);
 											} 
 										} else {
+											entityToTeleport.changeDimension(ServerLifecycleHooks.getCurrentServer().getLevel(entityIn.getDestDimension()), teleporter);
+										}
+									} else if (entityIn.allowedEntities.equals(EnumAllowedEntities.ITEMS_ONLY)) {
+										if (entityToTeleport instanceof ItemEntity) {
 											entityToTeleport.changeDimension(ServerLifecycleHooks.getCurrentServer().getLevel(entityIn.getDestDimension()), teleporter);
 										}
 									}

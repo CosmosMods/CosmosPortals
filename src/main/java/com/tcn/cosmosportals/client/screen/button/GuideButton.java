@@ -1,11 +1,14 @@
 package com.tcn.cosmosportals.client.screen.button;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.function.Supplier;
+
 import com.tcn.cosmoslibrary.client.ui.lib.CosmosUISystem;
 import com.tcn.cosmoslibrary.common.lib.ComponentColour;
 import com.tcn.cosmoslibrary.common.lib.ComponentHelper;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,7 +28,14 @@ public class GuideButton extends Button {
 	private int identifier;
 
 	public GuideButton(int x, int y, int size, int identifier, int colour, ResourceLocation location, Button.OnPress pressedAction) {
-		super(x, y, size, size, ComponentHelper.empty(), pressedAction);
+		super(x, y, size, size, ComponentHelper.empty(), pressedAction, new Button.CreateNarration() {
+			
+			@Override
+			public MutableComponent createNarrationMessage(Supplier<MutableComponent> p_253695_) {
+				// TODO Auto-generated method stub
+				return ComponentHelper.empty();
+			}
+		});
 		this.x = x;
 		this.y = y;
 		this.width = size;
@@ -37,7 +47,14 @@ public class GuideButton extends Button {
 	}
 	
 	public GuideButton(int x, int y, int colour, ResourceLocation location, Button.OnPress pressedAction) {
-		super(x, y, 15, 25, ComponentHelper.empty(), pressedAction);
+		super(x, y, 15, 25, ComponentHelper.empty(), pressedAction, new Button.CreateNarration() {
+			
+			@Override
+			public MutableComponent createNarrationMessage(Supplier<MutableComponent> p_253695_) {
+				// TODO Auto-generated method stub
+				return ComponentHelper.empty();
+			}
+		});
 		this.x = x;
 		this.y = y;
 		this.width = 15;
@@ -48,9 +65,9 @@ public class GuideButton extends Button {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (this.visible) {
-			this.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+			this.renderWidget(graphics, mouseX, mouseY, partialTicks);
 		}
 	}
 
@@ -60,30 +77,30 @@ public class GuideButton extends Button {
 	}
 
 	@Override
-	public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		this.setFGColor(this.colour);
 		
 		float[] rgb = ComponentColour.rgbFloatArray(this.colour);
 		
-		CosmosUISystem.setTextureWithColourAlpha(matrixStack, TEXTURE, rgb[0], rgb[1], rgb[2], this.alpha);
+		CosmosUISystem.setTextureWithColourAlpha(graphics.pose(), TEXTURE, rgb[0], rgb[1], rgb[2], this.alpha);
 		
 		this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
 		if (this.isHovered) {
 			if (this.identifier == 0) {
-				this.blit(matrixStack, this.x, this.y, 243, 216, this.width, this.height);
+				graphics.blit(TEXTURE, this.x, this.y, 243, 216, this.width, this.height);
 			} else if (this.identifier == 1) {
-				this.blit(matrixStack, this.x, this.y, 230, 216, this.width, this.height);
+				graphics.blit(TEXTURE, this.x, this.y, 230, 216, this.width, this.height);
 			} else {
-				this.blit(matrixStack, this.x, this.y, 241, 177, this.width, this.height);
+				graphics.blit(TEXTURE, this.x, this.y, 241, 177, this.width, this.height);
 			}
 		} else {
 			if (this.identifier == 0) {
-				this.blit(matrixStack, this.x, this.y, 243, 203, this.width, this.height);
+				graphics.blit(TEXTURE, this.x, this.y, 243, 203, this.width, this.height);
 			} else if (this.identifier == 1) {
-				this.blit(matrixStack, this.x, this.y, 230, 203, this.width, this.height);
+				graphics.blit(TEXTURE, this.x, this.y, 230, 203, this.width, this.height);
 			} else {
-				this.blit(matrixStack, this.x, this.y, 241, 152, this.width, this.height);
+				graphics.blit(TEXTURE, this.x, this.y, 241, 152, this.width, this.height);
 			}
 		}
 	}

@@ -13,11 +13,11 @@
         }
     },
     "textures": {
-        "particle": "cosmosportals:blocks/workbench/side",
-        "top": "cosmosportals:blocks/workbench/top",
-        "bottom": "cosmosportals:blocks/workbench/bottom",
-        "front": "cosmosportals:blocks/workbench/front",
-        "side": "cosmosportals:blocks/workbench/side"
+        "particle": "cosmosportals:block/workbench/side",
+        "top": "cosmosportals:block/workbench/top",
+        "bottom": "cosmosportals:block/workbench/bottom",
+        "front": "cosmosportals:block/workbench/front",
+        "side": "cosmosportals:block/workbench/side"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

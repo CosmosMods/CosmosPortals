@@ -6,10 +6,11 @@ import com.tcn.cosmoslibrary.common.enums.EnumUIMode;
 import com.tcn.cosmoslibrary.common.interfaces.block.IBlockInteract;
 import com.tcn.cosmoslibrary.common.interfaces.block.IBlockNotifier;
 import com.tcn.cosmoslibrary.common.interfaces.blockentity.IBlockEntityUIMode;
+import com.tcn.cosmoslibrary.common.lib.ComponentColour;
 import com.tcn.cosmoslibrary.common.lib.ComponentHelper;
 import com.tcn.cosmosportals.client.container.ContainerContainerWorkbench;
 import com.tcn.cosmosportals.core.block.BlockContainerWorkbench;
-import com.tcn.cosmosportals.core.management.ModBusManager;
+import com.tcn.cosmosportals.core.item.ItemPortalContainer;
 import com.tcn.cosmosportals.core.management.ModObjectHolder;
 
 import net.minecraft.core.BlockPos;
@@ -43,6 +44,9 @@ import net.minecraftforge.network.NetworkHooks;
 public class BlockEntityContainerWorkbench extends BlockEntity implements IBlockNotifier, IBlockInteract, Container, MenuProvider, IBlockEntityUIMode {
 
 	NonNullList<ItemStack> inventoryItems = NonNullList.<ItemStack>withSize(2, ItemStack.EMPTY);
+
+	public ComponentColour customColour = ComponentColour.EMPTY;
+	public String display_name = "";
 	
 	private EnumUIMode uiMode = EnumUIMode.DARK;
 	private EnumUIHelp uiHelp = EnumUIHelp.HIDDEN;
@@ -73,6 +77,9 @@ public class BlockEntityContainerWorkbench extends BlockEntity implements IBlock
 		super.saveAdditional(compound);
 
 		ContainerHelper.saveAllItems(compound, this.inventoryItems);
+
+		compound.putInt("customColour", this.customColour.getIndex());
+		compound.putString("display_name", display_name);
 		
 		compound.putInt("ui_mode", this.uiMode.getIndex());
 		compound.putInt("ui_help", this.uiHelp.getIndex());
@@ -86,6 +93,9 @@ public class BlockEntityContainerWorkbench extends BlockEntity implements IBlock
 		this.inventoryItems = NonNullList.<ItemStack>withSize(this.getContainerSize(), ItemStack.EMPTY);
 		ContainerHelper.loadAllItems(compound, this.inventoryItems);
 
+		this.customColour = ComponentColour.fromIndex(compound.getInt("customColour"));
+		this.display_name = compound.getString("display_name");
+		
 		this.uiMode = EnumUIMode.getStateFromIndex(compound.getInt("ui_mode"));
 		this.uiHelp = EnumUIHelp.getStateFromIndex(compound.getInt("ui_help"));
 		this.uiLock = EnumUILock.getStateFromIndex(compound.getInt("ui_lock"));
@@ -127,6 +137,21 @@ public class BlockEntityContainerWorkbench extends BlockEntity implements IBlock
 
 	public static void tick(Level levelIn, BlockPos posIn, BlockState stateIn, BlockEntityContainerWorkbench entityIn) { }
 
+	@Override
+	public void setChanged() {
+		super.setChanged();
+		
+		if (!this.getItem(1).isEmpty()) {
+			if (this.getItem(1).getItem() instanceof ItemPortalContainer) {
+				ItemPortalContainer item = (ItemPortalContainer) this.getItem(1).getItem();
+				
+				this.display_name = item.getContainerDisplayName(this.getItem(1));
+			}
+		} else {
+			this.display_name = "";
+		}
+	}
+	
 	@Override
 	public void attack(BlockState state, Level levelIn, BlockPos pos, Player player) { }
 
@@ -289,4 +314,75 @@ public class BlockEntityContainerWorkbench extends BlockEntity implements IBlock
 	public boolean canPlayerAccess(Player playerIn) {
 		return this.checkIfOwner(playerIn);
 	}
+
+	public String getContainerDisplayName() {
+		if (!this.getItem(1).isEmpty()) {
+			ItemStack stack = this.getItem(1);
+			
+			if (stack.getItem() instanceof ItemPortalContainer) {
+				ItemPortalContainer item = (ItemPortalContainer) stack.getItem();
+				
+				return item.getContainerDisplayName(stack);
+			}
+		}
+		
+		return "";
+	}
+
+	public void setContainerDisplayName(String nameIn) {
+		if (!this.getItem(1).isEmpty()) {
+			ItemStack stack = this.getItem(1);
+			
+			if (stack.getItem() instanceof ItemPortalContainer) {
+				ItemPortalContainer item = (ItemPortalContainer) stack.getItem();
+				
+				item.setContainerDisplayData(stack, nameIn, -1);
+			}
+		}
+	}
+
+	public int getContainerDisplayColour() {
+		if (!this.getItem(1).isEmpty()) {
+			ItemStack stack = this.getItem(1);
+			
+			if (stack.getItem() instanceof ItemPortalContainer) {
+				ItemPortalContainer item = (ItemPortalContainer) stack.getItem();
+				
+				return item.getContainerDisplayColour(stack);
+			}
+		}
+		
+		return -1;
+	}
+	
+	public void setContainerDisplayColour(int colourIn) {
+		if (!this.getItem(1).isEmpty()) {
+			ItemStack stack = this.getItem(1);
+			
+			if (stack.getItem() instanceof ItemPortalContainer) {
+				ItemPortalContainer item = (ItemPortalContainer) stack.getItem();
+				
+				item.setContainerDisplayData(stack, null, colourIn);
+			}
+		}
+	}
+
+	public void updateColour(ComponentColour colourIn) {
+		if (colourIn.isEmpty()) {
+			this.customColour = ComponentColour.EMPTY;
+		} else {
+			this.customColour = colourIn;
+		}
+		
+		this.setContainerDisplayColour(colourIn.dec());
+	}
+
+	public ComponentColour getCustomColour() {
+		return this.customColour;
+	}
+	
+	public void setCustomColour(ComponentColour colourIn) {
+		this.customColour = colourIn;
+	}
+	
 }

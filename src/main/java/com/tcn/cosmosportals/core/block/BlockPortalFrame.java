@@ -23,6 +23,8 @@ public class BlockPortalFrame extends CosmosBlockConnected {
 				return true;
 			} else if (conn.getBlock() instanceof BlockPortalDock) {
 				return true;
+			} else if (conn.getBlock() instanceof BlockPortalDockUpgraded) {
+				return true;
 			} else {
 				return false;
 			}

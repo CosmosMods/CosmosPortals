@@ -1,7 +1,7 @@
 {
     "textures": {
-        "particle": "cosmosportals:blocks/portal/ud",
-        "portal": "cosmosportals:blocks/portal/ud"
+        "particle": "cosmosportals:block/portal/ud",
+        "portal": "cosmosportals:block/portal/ud"
     },
     "elements": [
         {   "from": [ 0, 0, 6 ],

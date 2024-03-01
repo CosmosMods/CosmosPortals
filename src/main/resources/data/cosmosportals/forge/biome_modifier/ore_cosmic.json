@@ -1,6 +1,6 @@
 {
 	"type": "forge:add_features",
 	"biomes": "#minecraft:is_overworld",
-	"features": "cosmosportals:placed_cosmic_ore",
+	"features": "cosmosportals:ore_cosmic",
 	"step": "underground_ores"
 }

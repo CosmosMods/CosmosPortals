@@ -28,6 +28,7 @@
 	"block.cosmosportals.block_portal": "Dimensional Portal",
 	"block.cosmosportals.block_portal_frame": "Portal Frame",
 	"block.cosmosportals.block_portal_dock": "Portal Dock",
+	"block.cosmosportals.block_portal_dock_upgraded": "Upgraded Portal Dock",
 	
 	"block.cosmosportals.block_cosmic_ore": "Cosmic Ore",
 	"block.cosmosportals.block_deepslate_cosmic_ore": "Deepslate Cosmic Ore",
@@ -85,6 +86,8 @@
 	
 	"cosmosportals.gui.dock": "Portal Dock",
 	
+	"cosmosportals.gui.dock_upgraded": "Upgraded Portal Dock",
+	
 	"cosmosportals.gui.workbench": "Container Workbench",
 	
 	"cosmosportals.gui.dock.label_info": "Show or Hide Portal Dimension Labels.",
@@ -108,6 +111,12 @@
 	"cosmosportals.gui.dock.settings_title" :"Dock Settings:",
 	"cosmosportals.gui.dock.settings": "Open the Settings Menu.",
 	
+	"cosmosportals.gui.dock.cycle_up": "Cycle Slot Up",
+	"cosmosportals.gui.dock.cycle_up_value": "Select the next slot Up.",
+	
+	"cosmosportals.gui.dock.cycle_down": "Cycle Slot Down",
+	"cosmosportals.gui.dock.cycle_down_value": "Select the next slot Down.",
+	
 	"cosmosportals.gui.button.text.clear": "Clear the Text Field.",
 	"cosmosportals.gui.button.text.set": "Set new Display name.",
 	"cosmosportals.gui.button.text.reset": "Reset Display name.",
@@ -119,6 +128,10 @@
 	"cosmosportals.ui.help.container_item": "Dimension Container Item",
 	"cosmosportals.ui.help.container_item_one": "This shows the actual Dimension Container",
 	"cosmosportals.ui.help.container_item_two": "that is stored inside this Dock.",
+	
+	"cosmosportals.ui.help.container_items": "Dimension Container Items",
+	"cosmosportals.ui.help.container_items_one": "This shows the actual Dimension Containers",
+	"cosmosportals.ui.help.container_items_two": "that are stored inside this Dock.",
 	
 	"cosmosportals.ui.help.button_label": "Portal Label Button",
 	"cosmosportals.ui.help.button_label_one": "This Button toggles in-world Portal",
@@ -178,6 +191,30 @@
 	"cosmosportals.ui.help.workbench.container_copied_one": "This is where the fresh copy of your",
 	"cosmosportals.ui.help.workbench.container_copied_two": "Container will appear.",
 	
+	"cosmosportals.ui.help.workbench.button_apply": "Apply Settings",
+	"cosmosportals.ui.help.workbench.button_apply_one": "Apply the current colour and/or",
+	"cosmosportals.ui.help.workbench.button_apply_two": "name to the Container.",
+	
+	"cosmosportals.ui.help.workbench.button_clear": "Clear Text Field",
+	"cosmosportals.ui.help.workbench.button_clear_one": "Clear the text field.",
+	
+	"cosmosportals.ui.help.workbench.text": "Text Field",
+	"cosmosportals.ui.help.workbench.text_one": "Use this to enter a cutsom name",
+	"cosmosportals.ui.help.workbench.text_two": "for your Dimension Container.",
+	
+	"cosmosportals.ui.help.workbench.colour": "Container Colour Button",
+	"cosmosportals.ui.help.workbench.colour_one": "Press this button to cycle the Container",
+	"cosmosportals.ui.help.workbench.colour_two": "Colour, with all 16 of Minecraft's",
+	"cosmosportals.ui.help.workbench.colour_three": "colours available to choose from.",
+	
+	"cosmosportals.ui.help.cycle_up": "Slot Cycle Up Button",
+	"cosmosportals.ui.help.cycle_up_one": "Allows you to select the",
+	"cosmosportals.ui.help.cycle_up_two": "next Container slot Up.",
+	
+	"cosmosportals.ui.help.cycle_down": "Slot Cycle Down Button",
+	"cosmosportals.ui.help.cycle_down_one": "Allows you to select the",
+	"cosmosportals.ui.help.cycle_down_two": "next Container slot Down.",
+	
 	"cosmosportals.item_info.container": "An item that stores a Positon and Dimension to be used in a Portal.",
 	"cosmosportals.item_info.container_one": "This item will store your Position and the Dimension you are in when used.",
 	"cosmosportals.item_info.container_two": "To record: simply Sneak-right-click.",
@@ -188,6 +225,7 @@
 	"cosmosportals.item_info.container_linked_three": "This container has stored information:",
 	"cosmosportals.item_info.container_linked_error": "This container is linked but has no information!",
 	
+	"cosmosportals.item_info.container_display_name": "Display Name: ",
 	"cosmosportals.item_info.container_position": "Recorded Position: ",
 	"cosmosportals.item_info.container_dimension": "Recorded Dimension: ",
 	"cosmosportals.item_message.container_recorded": "Dimension and Position Recorded!",
@@ -204,6 +242,11 @@
 	"cosmosportals.block_info.dock_one": "Portal Controller. Used to summon a Portal.",
 	"cosmosportals.block_info.dock_two": "To use: Sneak-right-click with a Linked Dimension Container.",
 	"cosmosportals.block_info.dock_three": "Has a GUI, can be configured.",
+	
+	"cosmosportals.block_info.dock_upgraded": "Upgraded Cosmic Portal Dock",
+	"cosmosportals.block_info.dock_upgraded_one": "Portal Controller. Used to summon a Portal. 4 Slots for Containers.",
+	"cosmosportals.block_info.dock_upgraded_two": "To use: Right-click to access the GUI and place Containers in the slots.",
+	"cosmosportals.block_info.dock_upgraded_three": "Has a GUI, can be configured.",
 	
 	"cosmosportals.block_info.workbench": "Container Workbench",
 	"cosmosportals.block_info.workbench_one": "Used to duplicate Dimension Containers.",

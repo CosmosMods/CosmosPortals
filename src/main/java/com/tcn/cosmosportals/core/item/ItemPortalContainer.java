@@ -57,6 +57,24 @@ public class ItemPortalContainer extends CosmosItem {
 				tooltip.add(ComponentHelper.getTooltipInfo("cosmosportals.item_info.container"));
 			}
 			
+			if (stackIn.hasTag()) {
+				CompoundTag stack_tag = stackIn.getTag();
+				
+				if (stack_tag.contains("nbt_data")) {
+					CompoundTag nbt_data = stack_tag.getCompound("nbt_data");
+					
+					if (nbt_data.contains("display_data")) {
+						CompoundTag display_data = nbt_data.getCompound("display_data");
+						
+						String display_name = display_data.getString("name");
+						int display_colour = display_data.getInt("colour");
+						
+						tooltip.add(ComponentHelper.style(ComponentColour.GRAY, "cosmosportals.item_info.container_display_name")
+								.append(ComponentHelper.comp(Value.LIGHT_GRAY + "[ ")).append(ComponentHelper.style(display_colour, display_name)).append(ComponentHelper.comp(Value.LIGHT_GRAY + " ]")));
+					}
+				}
+			}
+			
 			if (ComponentHelper.displayShiftForDetail) {
 				tooltip.add(ComponentHelper.shiftForMoreDetails());
 			}
@@ -71,6 +89,16 @@ public class ItemPortalContainer extends CosmosItem {
 					
 					if (stack_tag.contains("nbt_data")) {
 						CompoundTag nbt_data = stack_tag.getCompound("nbt_data");
+
+						if (nbt_data.contains("display_data")) {
+							CompoundTag display_data = nbt_data.getCompound("display_data");
+							
+							String display_name = display_data.getString("name");
+							int display_colour = display_data.getInt("colour");
+							
+							tooltip.add(ComponentHelper.style(ComponentColour.GRAY, "cosmosportals.item_info.container_display_name").append(ComponentHelper.comp(Value.LIGHT_GRAY + "[ "))
+									.append(ComponentHelper.style(display_colour, display_name)).append(ComponentHelper.comp(Value.LIGHT_GRAY + " ]")));
+						}
 						
 						if (nbt_data.contains("position_data")) {
 							CompoundTag position_data = nbt_data.getCompound("position_data");
@@ -148,6 +176,7 @@ public class ItemPortalContainer extends CosmosItem {
 					CompoundTag nbt_data = new CompoundTag();
 					CompoundTag dimension_data = new CompoundTag();
 					CompoundTag position_data = new CompoundTag();
+					CompoundTag display_data = new CompoundTag();
 
 					dimension_data.putString("namespace", dim.location().getNamespace());
 					dimension_data.putString("path", dim.location().getPath());
@@ -177,6 +206,11 @@ public class ItemPortalContainer extends CosmosItem {
 					nbt_data.put("dimension_data", dimension_data);
 					nbt_data.put("position_data", position_data);
 					
+					display_data.putString("name", this.getContainerDisplayName(destDimension));
+					display_data.putInt("colour", colour);
+					
+					nbt_data.put("display_data", display_data);
+					
 					stack_tag.put("nbt_data", nbt_data);
 					linkedStack.setTag(stack_tag);
 		
@@ -198,5 +232,84 @@ public class ItemPortalContainer extends CosmosItem {
 			}
 		}
 		return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
+	}
+	
+	public String getContainerDisplayName(ResourceLocation destDimension) {
+		return WordUtils.capitalizeFully(destDimension.getPath().replace("_", " "));
+	}
+	
+	public void setContainerDisplayData(ItemStack stackIn, String nameIn, int colourIn) {
+		if (stackIn.hasTag()) {
+			CompoundTag stack_tag = stackIn.getTag();
+			
+			if (stack_tag.contains("nbt_data")) {
+				CompoundTag nbt_data = stack_tag.getCompound("nbt_data");
+				
+				if (nbt_data.contains("display_data")) {
+					CompoundTag display_data = nbt_data.getCompound("display_data");
+					
+					if (nameIn != null) {						
+						if (nameIn == "") {
+							if (nbt_data.contains("dimension_data")) {
+								CompoundTag dimension_data = nbt_data.getCompound("dimension_data");
+								
+								String path = dimension_data.getString("path");
+								String newName = WordUtils.capitalizeFully(path.replace("_", " "));
+								
+								display_data.putString("name", newName);
+							}
+						} else {
+							display_data.putString("name", nameIn);
+						}
+					}
+										
+					if (colourIn > 0) {
+						display_data.putInt("colour", colourIn);
+					} else if (colourIn == 0) {
+						if (nbt_data.contains("dimension_data")) {
+							CompoundTag dimension_data = nbt_data.getCompound("dimension_data");
+							
+							int colour = dimension_data.getInt("colour");
+							
+							display_data.putInt("colour", colour);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public String getContainerDisplayName(ItemStack stackIn) {
+		if (stackIn.hasTag()) {
+			CompoundTag stack_tag = stackIn.getTag();
+			
+			if (stack_tag.contains("nbt_data")) {
+				CompoundTag nbt_data = stack_tag.getCompound("nbt_data");
+				
+				if (nbt_data.contains("display_data")) {
+					CompoundTag display_data = nbt_data.getCompound("display_data");
+					
+					return display_data.getString("name");
+				}
+			}
+		}
+		return "";
+	}
+	
+	public int getContainerDisplayColour(ItemStack stackIn) {
+		if (stackIn.hasTag()) {
+			CompoundTag stack_tag = stackIn.getTag();
+			
+			if (stack_tag.contains("nbt_data")) {
+				CompoundTag nbt_data = stack_tag.getCompound("nbt_data");
+				
+				if (nbt_data.contains("display_data")) {
+					CompoundTag display_data = nbt_data.getCompound("display_data");
+					
+					return display_data.getInt("colour");
+				}
+			}
+		}
+		return -1;
 	}
 }

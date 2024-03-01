@@ -6,10 +6,10 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
-import com.mojang.math.Vector3d;
 import com.tcn.cosmoslibrary.common.enums.EnumAllowedEntities;
 import com.tcn.cosmosportals.core.block.BlockPortal;
 import com.tcn.cosmosportals.core.block.BlockPortalDock;
+import com.tcn.cosmosportals.core.block.BlockPortalDockUpgraded;
 import com.tcn.cosmosportals.core.block.BlockPortalFrame;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortal;
 import com.tcn.cosmosportals.core.management.ConfigurationManagerCommon;
@@ -33,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class CustomPortalShape {
 	private static final BlockBehaviour.StatePredicate FRAME = (stateIn, worldIn, posIn) -> {
-		return stateIn.getBlock() instanceof BlockPortalFrame || stateIn.getBlock() instanceof BlockPortalDock;
+		return stateIn.getBlock() instanceof BlockPortalFrame || stateIn.getBlock() instanceof BlockPortalDock || stateIn.getBlock() instanceof BlockPortalDockUpgraded;
 	};
 
 	private final LevelAccessor level;
@@ -222,7 +222,7 @@ public class CustomPortalShape {
 		return this.isValid() && this.numPortalBlocks == this.width * this.height;
 	}
 
-	public static Vector3d getRelativePosition(BlockUtil.FoundRectangle resultIn, Direction.Axis axisIn, Vec3 vecIn, EntityDimensions entitySizeIn) {
+	public static Vec3 getRelativePosition(BlockUtil.FoundRectangle resultIn, Direction.Axis axisIn, Vec3 vecIn, EntityDimensions entitySizeIn) {
 		double d0 = (double) resultIn.axis1Size - (double) entitySizeIn.width;
 		double d1 = (double) resultIn.axis2Size - (double) entitySizeIn.height;
 		BlockPos blockpos = resultIn.minCorner;
@@ -245,7 +245,7 @@ public class CustomPortalShape {
 
 		Direction.Axis direction$axis1 = axisIn == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
 		double d3 = vecIn.get(direction$axis1) - ((double) blockpos.get(direction$axis1) + 0.5D);
-		return new Vector3d(d2, d4, d3);
+		return new Vec3(d2, d4, d3);
 	}
 
 	public static PortalInfo createPortalInfo(ServerLevel serverWorldIn, BlockUtil.FoundRectangle resultIn, Direction.Axis axisIn, Vec3 vecIn, EntityDimensions entitySizeIn, Vec3 speedIn, float yRot, float xRot) {

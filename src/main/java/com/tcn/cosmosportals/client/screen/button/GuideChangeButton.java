@@ -1,12 +1,15 @@
 package com.tcn.cosmosportals.client.screen.button;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.function.Supplier;
+
 import com.tcn.cosmoslibrary.client.ui.lib.CosmosUISystem;
 import com.tcn.cosmoslibrary.common.lib.ComponentHelper;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,26 +20,33 @@ public class GuideChangeButton extends Button {
 	private final boolean isForward;
 	private final boolean playTurnSound;
 
-	private ResourceLocation texture;
+	private ResourceLocation TEXTURE;
 
 	public GuideChangeButton(int x, int y, boolean isForward, Button.OnPress onPress, boolean playTurnSound, ResourceLocation location) {
-		super(x, y, 25, 13, ComponentHelper.empty(), onPress);
+		super(x, y, 25, 13, ComponentHelper.empty(), onPress, new Button.CreateNarration() {
+			
+			@Override
+			public MutableComponent createNarrationMessage(Supplier<MutableComponent> p_253695_) {
+				// TODO Auto-generated method stub
+				return ComponentHelper.empty();
+			}
+		});
 		this.isForward = isForward;
 		this.playTurnSound = playTurnSound;
 
-		this.texture = location;
+		this.TEXTURE = location;
 	}
 	
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (this.visible) {
-			this.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+			this.renderWidget(graphics, mouseX, mouseY, partialTicks);
 		}
 	}
 	
 	@Override
-	public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		CosmosUISystem.setTextureWithColourAlpha(matrixStack, texture, 1.0F, 1.0F, 1.0F, this.alpha);
+	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		CosmosUISystem.setTextureWithColourAlpha(graphics.pose(), TEXTURE, 1.0F, 1.0F, 1.0F, this.alpha);
 		
 		int i = 206;
 		int j = 230;
@@ -49,7 +59,7 @@ public class GuideChangeButton extends Button {
 			j += 13;
 		}
 
-		this.blit(matrixStack, this.x, this.y, i, j, 25, 13);
+		graphics.blit(TEXTURE, this.getX(), this.getY(), i, j, 25, 13);
 	}
 
 	@Override

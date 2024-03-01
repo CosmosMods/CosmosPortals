@@ -15,13 +15,11 @@ import net.minecraftforge.registries.RegistryObject;
 public class CoreSoundManager {
 	
 	public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, CosmosPortals.MOD_ID);
-
-	//public static final ForgeSoundType PORTAL_TYPE = new ForgeSoundType();
 	
-	public static final RegistryObject<SoundEvent> PORTAL_TRAVEL = SOUNDS.register("portal_travel", () -> new SoundEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_travel")));
+	public static final RegistryObject<SoundEvent> PORTAL_TRAVEL = SOUNDS.register("portal_travel", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_travel")));
 	
-	public static final RegistryObject<SoundEvent> PORTAL_CREATE = SOUNDS.register("portal_create", () -> new SoundEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_create")));
-	public static final RegistryObject<SoundEvent> PORTAL_DESTROY = SOUNDS.register("portal_destroy", () -> new SoundEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_destroy")));
+	public static final RegistryObject<SoundEvent> PORTAL_CREATE = SOUNDS.register("portal_create", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_create")));
+	public static final RegistryObject<SoundEvent> PORTAL_DESTROY = SOUNDS.register("portal_destroy", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(CosmosPortals.MOD_ID + ":" + "portal_destroy")));
 	
 	public static void register(IEventBus bus) {
 		SOUNDS.register(bus);

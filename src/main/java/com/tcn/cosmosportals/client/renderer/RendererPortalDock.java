@@ -1,12 +1,10 @@
 package com.tcn.cosmosportals.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import com.tcn.cosmoslibrary.client.renderer.lib.CosmosRendererHelper;
 import com.tcn.cosmoslibrary.common.lib.ComponentHelper;
 import com.tcn.cosmosportals.core.block.BlockPortal;
-import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDock;
+import com.tcn.cosmosportals.core.blockentity.AbstractBlockEntityPortalDock;
 import com.tcn.cosmosportals.core.management.ConfigurationManagerCommon;
 
 import net.minecraft.client.Minecraft;
@@ -23,7 +21,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class RendererPortalDock implements BlockEntityRenderer<BlockEntityPortalDock> {
+public class RendererPortalDock implements BlockEntityRenderer<AbstractBlockEntityPortalDock> {
 	
 	private BlockEntityRendererProvider.Context context;
 
@@ -32,26 +30,25 @@ public class RendererPortalDock implements BlockEntityRenderer<BlockEntityPortal
 	}	
 
 	@Override
-	public void render(BlockEntityPortalDock tileEntityIn, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+	public void render(AbstractBlockEntityPortalDock entityIn, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		Minecraft minecraft = Minecraft.getInstance();
 		LocalPlayer player = minecraft.player;
 		BlockPos pos = player.blockPosition();
-		BlockPos blockPos = tileEntityIn.getBlockPos();
+		BlockPos blockPos = entityIn.getBlockPos();
 		
 		double distanceToPlayer = pos.distManhattan(blockPos);
 		
 		if (distanceToPlayer <= ConfigurationManagerCommon.getInstance().getLabelMaximumDistance()) {
 			Font fontRenderer = this.context.getFont();
-			Level world = tileEntityIn.getLevel();
-			int colour = tileEntityIn.getDisplayColour();
-			
-			String human_name = tileEntityIn.getPortalDisplayName();
+			Level world = entityIn.getLevel();
+			int colour = entityIn.getDisplayColour();			
+			String humanName = entityIn.getContainerDisplayName();
 	
-			BlockState above = world.getBlockState(tileEntityIn.getBlockPos().above());
-			BlockState below = world.getBlockState(tileEntityIn.getBlockPos().below());
+			BlockState above = world.getBlockState(entityIn.getBlockPos().above());
+			BlockState below = world.getBlockState(entityIn.getBlockPos().below());
 	
 			poseStack.pushPose();
-			if (tileEntityIn.renderLabel && ConfigurationManagerCommon.getInstance().getRenderPortalLabels()) {
+			if (entityIn.renderLabel && ConfigurationManagerCommon.getInstance().getRenderPortalLabels()) {
 				if (above.getBlock() instanceof BlockPortal) {
 					Axis axis = above.getValue(BlockPortal.AXIS);
 					poseStack.translate(0.5F, 1.5F, 0.5F);
@@ -60,26 +57,26 @@ public class RendererPortalDock implements BlockEntityRenderer<BlockEntityPortal
 						//Facing East
 						poseStack.pushPose();
 						poseStack.translate(0.25F, 0.0F, 0.0F);
-						poseStack.mulPose(new Quaternion(Vector3f.YN, 90, true));
-						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, human_name), bufferIn, combinedLightIn);
+						poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(90));
+						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, humanName), bufferIn, combinedLightIn);
 						poseStack.popPose();
 						
 						poseStack.pushPose();
 						poseStack.translate(-0.25F, 0.0F, 0.0F);
-						poseStack.mulPose(new Quaternion(Vector3f.YN, -90, true));
-						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, human_name), bufferIn, combinedLightIn);
+						poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(-90));
+						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, humanName), bufferIn, combinedLightIn);
 						poseStack.popPose();
 					} else {
 						//Facing East
 						poseStack.pushPose();
 						poseStack.translate(0.0F, 0.0F, -0.25F);
-						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, human_name), bufferIn, combinedLightIn);
+						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, humanName), bufferIn, combinedLightIn);
 						poseStack.popPose();
 						
 						poseStack.pushPose();
 						poseStack.translate(0.0F, 0.0F, 0.25F);
-						poseStack.mulPose(new Quaternion(Vector3f.YN, 180, true));
-						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, human_name), bufferIn, combinedLightIn);
+						poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(180));
+						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, humanName), bufferIn, combinedLightIn);
 						poseStack.popPose();
 					}
 				} else if (below.getBlock() instanceof BlockPortal) {
@@ -90,26 +87,26 @@ public class RendererPortalDock implements BlockEntityRenderer<BlockEntityPortal
 						//Facing East
 						poseStack.pushPose();
 						poseStack.translate(0.25F, 0.0F, 0.0F);
-						poseStack.mulPose(new Quaternion(Vector3f.YN, 90, true));
-						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, human_name), bufferIn, combinedLightIn);
+						poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(90));
+						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, humanName), bufferIn, combinedLightIn);
 						poseStack.popPose();
 						
 						poseStack.pushPose();
 						poseStack.translate(-0.25F, 0.0F, 0.0F);
-						poseStack.mulPose(new Quaternion(Vector3f.YN, -90, true));
-						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, human_name), bufferIn, combinedLightIn);
+						poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(-90));
+						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, humanName), bufferIn, combinedLightIn);
 						poseStack.popPose();
 					} else {
 						//Facing East
 						poseStack.pushPose();
 						poseStack.translate(0.0F, 0.0F, -0.25F);
-						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, human_name), bufferIn, combinedLightIn);
+						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, humanName), bufferIn, combinedLightIn);
 						poseStack.popPose();
 						
 						poseStack.pushPose();
 						poseStack.translate(0.0F, 0.0F, 0.25F);
-						poseStack.mulPose(new Quaternion(Vector3f.YN, 180, true));
-						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, human_name), bufferIn, combinedLightIn);
+						poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(180));
+						CosmosRendererHelper.renderLabelInWorld(fontRenderer, poseStack, ComponentHelper.style(colour, humanName), bufferIn, combinedLightIn);
 						poseStack.popPose();
 					}
 				}

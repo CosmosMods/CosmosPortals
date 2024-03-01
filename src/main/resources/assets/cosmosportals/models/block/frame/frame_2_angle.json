@@ -2,12 +2,12 @@
     "__comment": "Model for when two adgacent sides are connected.",
 	"parent": "cosmoslibrary:block/tinted_cube",
     "textures": {
-		"particle": "cosmosportals:blocks/frame/normal",
-        "down": "cosmosportals:blocks/frame/r",
-		"up": "cosmosportals:blocks/frame/udlr",
-		"north": "cosmosportals:blocks/frame/ul",
-		"south": "cosmosportals:blocks/frame/ur",
-		"west": "cosmosportals:blocks/frame/u",
-		"east": "cosmosportals:blocks/frame/udlr"
+		"particle": "cosmosportals:block/frame/normal",
+        "down": "cosmosportals:block/frame/r",
+		"up": "cosmosportals:block/frame/udlr",
+		"north": "cosmosportals:block/frame/ul",
+		"south": "cosmosportals:block/frame/ur",
+		"west": "cosmosportals:block/frame/u",
+		"east": "cosmosportals:block/frame/udlr"
     }
 }
