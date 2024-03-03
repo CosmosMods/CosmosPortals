@@ -13,9 +13,9 @@
         }
     },
     "textures": {
-        "particle": "cosmosportals:block/dock_base",
-        "base": "cosmosportals:block/dock_base",
-        "centre": "cosmosportals:block/dock_overlay"
+        "particle": "cosmosportals:block/dock/base",
+        "base": "cosmosportals:block/dock/base",
+        "centre": "cosmosportals:block/dock/overlay"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

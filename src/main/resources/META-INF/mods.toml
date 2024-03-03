@@ -6,7 +6,7 @@ logoFile="cosmic_logo.png" #optional
 	
 [[mods]] #mandatory
 	modId="cosmosportals" #mandatory
-	version="7.3.0.40" #mandatory
+	version="7.4.0.0" #mandatory
 	displayName="Cosmos Portals" #mandatory
 	displayURL="https://www.curseforge.com/minecraft/mc-mods/cosmos-portals" #optional
 	credits="XCompWiz for the idea from MystCraft" #optional
@@ -18,7 +18,7 @@ Create Portals to anywhere, from anywhere!
 [[dependencies.cosmosportals]] #optional
     modId="cosmoslibrary" #mandatory
     mandatory=true #mandatory
-    versionRange="[10.3.1.0,11)" #mandatory
+    versionRange="[10.5.1.0,11)" #mandatory
     ordering="BEFORE"
     side="BOTH"
 [[dependencies.cosmosportals]] #optional
@@ -42,7 +42,7 @@ logoFile="cosmos_logo.png" #optional
 
 [[mods]] #mandatory
 	modId="cosmoslibrary" #mandatory
-	version="10.3.1.0" #mandatory
+	version="10.5.1.0" #mandatory
 	displayName="Cosmos Library" #mandatory
 	displayURL="https://www.curseforge.com/minecraft/mc-mods/cosmos-library" #optional
 	authors="TheCosmicNebula" #optional

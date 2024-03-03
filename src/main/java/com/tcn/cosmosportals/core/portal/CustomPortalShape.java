@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.tcn.cosmoslibrary.common.enums.EnumAllowedEntities;
+import com.tcn.cosmosportals.core.block.BlockDockController;
 import com.tcn.cosmosportals.core.block.BlockPortal;
 import com.tcn.cosmosportals.core.block.BlockPortalDock;
 import com.tcn.cosmosportals.core.block.BlockPortalDockUpgraded;
@@ -33,7 +34,11 @@ import net.minecraft.world.phys.Vec3;
 
 public class CustomPortalShape {
 	private static final BlockBehaviour.StatePredicate FRAME = (stateIn, worldIn, posIn) -> {
-		return stateIn.getBlock() instanceof BlockPortalFrame || stateIn.getBlock() instanceof BlockPortalDock || stateIn.getBlock() instanceof BlockPortalDockUpgraded;
+		return 
+			stateIn.getBlock() instanceof BlockPortalFrame || 
+			stateIn.getBlock() instanceof BlockPortalDock || 
+			stateIn.getBlock() instanceof BlockPortalDockUpgraded || 
+			stateIn.getBlock() instanceof BlockDockController;
 	};
 
 	private final LevelAccessor level;
@@ -219,7 +224,7 @@ public class CustomPortalShape {
 	}
 
 	public boolean isComplete() {
-		return this.isValid() && this.numPortalBlocks == this.width * this.height;
+		return this.isValid() && this.numPortalBlocks == (this.width * this.height);
 	}
 
 	public static Vec3 getRelativePosition(BlockUtil.FoundRectangle resultIn, Direction.Axis axisIn, Vec3 vecIn, EntityDimensions entitySizeIn) {

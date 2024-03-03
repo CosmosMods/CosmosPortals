@@ -4,9 +4,8 @@ import java.util.function.Supplier;
 
 import com.tcn.cosmoslibrary.common.lib.ComponentColour;
 import com.tcn.cosmosportals.CosmosPortals;
+import com.tcn.cosmosportals.core.blockentity.AbstractBlockEntityPortalDock;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityContainerWorkbench;
-import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDock;
-import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDockUpgraded;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,20 +17,24 @@ public class PacketColour  {
 	
 	private BlockPos pos;
 	private int colour;
+	private int slotIndex;
 	
 	public PacketColour(FriendlyByteBuf buf) {
 		this.pos = buf.readBlockPos();
 		this.colour = buf.readInt();
+		this.slotIndex = buf.readInt();
 	}
 	
-	public PacketColour(BlockPos pos, ComponentColour colourIn) {
+	public PacketColour(BlockPos pos, ComponentColour colourIn, int slotIndex) {
 		this.pos = pos;
 		this.colour = colourIn.getIndex();
+		this.slotIndex = slotIndex;
 	}
 	
 	public static void encode(PacketColour packet, FriendlyByteBuf buf) {
 		buf.writeBlockPos(packet.pos);
 		buf.writeInt(packet.colour);
+		buf.writeInt(packet.slotIndex);
 	}
 	
 	public static void handle(final PacketColour packet, Supplier<NetworkEvent.Context> context) {
@@ -41,17 +44,10 @@ public class PacketColour  {
 			ServerLevel world = (ServerLevel) ctx.getSender().level();
 			BlockEntity tile = world.getBlockEntity(packet.pos);
 			
-			if (tile instanceof BlockEntityPortalDock) {
-				BlockEntityPortalDock tileDock = (BlockEntityPortalDock) tile;
+			if (tile instanceof AbstractBlockEntityPortalDock) {
+				AbstractBlockEntityPortalDock tileDock = (AbstractBlockEntityPortalDock) tile;
 				
-				tileDock.updateColour(ComponentColour.fromIndex(packet.colour));
-				tileDock.sendUpdates(true);
-			} 
-
-			if (tile instanceof BlockEntityPortalDockUpgraded) {
-				BlockEntityPortalDockUpgraded tileDock = (BlockEntityPortalDockUpgraded) tile;
-				
-				tileDock.updateColour(ComponentColour.fromIndex(packet.colour));
+				tileDock.updateColour(ComponentColour.fromIndex(packet.colour), packet.slotIndex);
 				tileDock.sendUpdates(true);
 			} 
 			

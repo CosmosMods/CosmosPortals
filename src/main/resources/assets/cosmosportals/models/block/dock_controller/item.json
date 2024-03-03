@@ -1,0 +1,53 @@
+{
+    "parent": "block/block",
+    "display": {
+        "gui": {
+            "rotation": [ 30, 135, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.625, 0.625, 0.625 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "textures": {
+        "particle": "cosmosportals:block/dock/controller/base",
+        "base": "cosmosportals:block/dock/controller/base",
+        "ends": "cosmosportals:block/dock/controller/ends",
+        "buttons": "cosmosportals:block/dock/controller/buttons",
+        "text": "cosmosportals:block/dock/controller/text"
+    },
+    "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "texture": "#ends",  "cullface": "down",  "tintindex": 0 },
+                "up":    { "texture": "#ends",  "cullface": "up",    "tintindex": 0 },
+                "north": { "texture": "#base",  "cullface": "north", "tintindex": 0 },
+                "south": { "texture": "#base",  "cullface": "south", "tintindex": 0 },
+                "west":  { "texture": "#base",  "cullface": "west",  "tintindex": 0 },
+                "east":  { "texture": "#base",  "cullface": "east",  "tintindex": 0 }
+            }
+        },
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "north": { "texture": "#buttons",  "cullface": "north", "tintindex": 1 },
+                "south": { "texture": "#buttons",  "cullface": "south", "tintindex": 1 },
+                "west":  { "texture": "#buttons",  "cullface": "west",  "tintindex": 1 },
+                "east":  { "texture": "#buttons",  "cullface": "east",  "tintindex": 1 }
+            }
+        },
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "north": { "texture": "#text",  "cullface": "north", "tintindex": 1 },
+                "south": { "texture": "#text",  "cullface": "south", "tintindex": 1 },
+                "west":  { "texture": "#text",  "cullface": "west",  "tintindex": 1 },
+                "east":  { "texture": "#text",  "cullface": "east",  "tintindex": 1 }
+            }
+        }
+    ]
+}

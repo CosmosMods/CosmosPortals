@@ -32,7 +32,7 @@ public class ScreenPortalDock extends CosmosScreenUIModeBE<ContainerPortalDock> 
 	private CosmosButtonWithType toggleEntityButton; 	private int[] indexE = new int[] { 114,  139, 20 };
 	private CosmosButtonWithType toggleParticlesButton; private int[] indexP = new int[] { 144,  139, 20 };
 	
-	private CosmosColourButton colourButton; private int[] indexC = new int[] { 16, 109, 20 };
+	private CosmosColourButton colourButton; private int[] indexC = new int[] { 166, 110, 20 };
 
 	public ScreenPortalDock(ContainerPortalDock containerIn, Inventory playerInventoryIn, Component titleIn) {
 		super(containerIn, playerInventoryIn, titleIn);
@@ -95,6 +95,23 @@ public class ScreenPortalDock extends CosmosScreenUIModeBE<ContainerPortalDock> 
 				
 				CosmosUISystem.renderStaticElement(this, graphics, this.getScreenCoords(), (this.imageWidth - 11) / 2 - width / 2, 117, 0, 0, width, 12, new float[] { 1.0F, 1.0F, 1.0F, 0.6F }, CosmosPortalsReference.DOCK_LABEL);
 			}
+
+			ComponentColour customColour = blockEntity.getCustomColour();
+			if (customColour != ComponentColour.EMPTY) {
+				float[] floatCol = new float[] { 
+					ComponentColour.rgbFloatArray(customColour.dec())[0], 
+					ComponentColour.rgbFloatArray(customColour.dec())[1],
+					ComponentColour.rgbFloatArray(customColour.dec())[2],
+					1 
+				};
+				
+				CosmosUISystem.renderStaticElement(this, graphics, this.getScreenCoords(), 167, 111, 0, 22, 4, 16, floatCol, CosmosPortalsReference.DOCK_OVERLAY_ONE_UPGRADED);
+				CosmosUISystem.setTextureColour(ComponentColour.WHITE);
+			}
+			
+			
+			boolean hovered3 = this.colourButton.isMouseOver(mouseX, mouseY);
+			CosmosUISystem.renderStaticElement(this, graphics, this.getScreenCoords(), indexC[0], indexC[1], hovered3 ? 6 : 0, 38, 6, 18, CosmosPortalsReference.DOCK_OVERLAY_ONE_UPGRADED);
 		}
 	}
 	
@@ -187,7 +204,7 @@ public class ScreenPortalDock extends CosmosScreenUIModeBE<ContainerPortalDock> 
 			this.toggleEntityButton = this.addRenderableWidget(new CosmosButtonWithType(TYPE.GENERAL, this.getScreenCoords()[0] + indexE[0], this.getScreenCoords()[1] + indexE[1], indexE[2], true, true, i, ComponentHelper.empty(), (button, isLeftClick) -> { this.clickButton(this.toggleEntityButton, isLeftClick); }));
 			this.toggleParticlesButton = this.addRenderableWidget(new CosmosButtonWithType(TYPE.GENERAL, this.getScreenCoords()[0] + indexP[0], this.getScreenCoords()[1] + indexP[1], indexP[2], true, true, blockEntity.showParticles ? 1 : 2, ComponentHelper.empty(), (button, isLeftClick) -> { this.clickButton(this.toggleParticlesButton, isLeftClick); }));
 			
-			this.colourButton = this.addRenderableWidget(new CosmosColourButton(blockEntity.getCustomColour(), this.getScreenCoords()[0] + indexC[0], this.getScreenCoords()[1] + indexC[1], indexC[2], true, true, ComponentHelper.empty(), (button, isLeftClick) -> { this.clickButton(this.colourButton, isLeftClick); }));
+			this.colourButton = this.addRenderableWidget(new CosmosColourButton(blockEntity.getCustomColour(), this.getScreenCoords()[0] + indexC[0], this.getScreenCoords()[1] + indexC[1], 6, 18, true, true, ComponentHelper.empty(), (button, isLeftClick) -> { this.clickButton(this.colourButton, isLeftClick); }));
 			
 			//this.reformPortalButton = this.addRenderableWidget(new CosmosButtonWithType(TYPE.GENERAL, this.getScreenCoords()[0] + indexR[0], this.getScreenCoords()[1] + indexR[1], indexR[2], !blockEntity.isPortalFormed, true,          1, ComponentHelper.style(""), (button) -> { this.clickButton(this.reformPortalButton);    }));
 		}
@@ -224,7 +241,7 @@ public class ScreenPortalDock extends CosmosScreenUIModeBE<ContainerPortalDock> 
 				
 				if (button.equals(this.colourButton)) {
 					ComponentColour colour = hasShiftDown() ? ComponentColour.EMPTY : blockEntity.getCustomColour().getNextVanillaColour(true);
-					NetworkManager.sendToServer(new PacketColour(this.menu.getBlockPos(), colour));
+					NetworkManager.sendToServer(new PacketColour(this.menu.getBlockPos(), colour, 0));
 				}
 			} else {
 				if (button.equals(this.toggleEntityButton)) {
@@ -234,7 +251,7 @@ public class ScreenPortalDock extends CosmosScreenUIModeBE<ContainerPortalDock> 
 	
 				if (button.equals(this.colourButton)) {
 					ComponentColour colour = hasShiftDown() ? ComponentColour.EMPTY : blockEntity.getCustomColour().getNextVanillaColourReverse(true);
-					NetworkManager.sendToServer(new PacketColour(this.menu.getBlockPos(), colour));
+					NetworkManager.sendToServer(new PacketColour(this.menu.getBlockPos(), colour, 0));
 				}
 			}
 		} 
@@ -249,7 +266,7 @@ public class ScreenPortalDock extends CosmosScreenUIModeBE<ContainerPortalDock> 
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.container_two")
 		);
 		
-		this.addRenderableUIHelpElement(this.getScreenCoords(), 144, 109, 20, 20, ComponentHelper.style(ComponentColour.LIGHT_GRAY, "bold", "cosmosportals.ui.help.container_item"), 
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 144, 109, 20, 20, ComponentColour.RED, ComponentHelper.style(ComponentColour.RED, "bold", "cosmosportals.ui.help.container_item"), 
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.container_item_one"), 
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.container_item_two")
 		);
@@ -275,13 +292,13 @@ public class ScreenPortalDock extends CosmosScreenUIModeBE<ContainerPortalDock> 
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.button_effects_two")
 		);
 		
-		this.addRenderableUIHelpElement(this.getScreenCoords(), 43, 115, 94, 16, ComponentHelper.style(ComponentColour.DARK_GREEN, "bold", "cosmosportals.ui.help.label"), 
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 43, 115, 94, 16, ComponentColour.DARK_GREEN, ComponentHelper.style(ComponentColour.DARK_GREEN, "bold", "cosmosportals.ui.help.label"), 
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.label_one"), 
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.label_two"),
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.label_three")
 		);
 		
-		this.addRenderableUIHelpElement(this.getScreenCoords(), 15, 108, 22, 22, ComponentHelper.style(ComponentColour.DARK_GREEN, "bold", "cosmosportals.ui.help.colour"), 
+		this.addRenderableUIHelpElement(this.getScreenCoords(), 165, 109, 8, 20, ComponentColour.YELLOW, ComponentHelper.style(ComponentColour.YELLOW, "bold", "cosmosportals.ui.help.colour"), 
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.colour_one"), 
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.colour_two"),
 			ComponentHelper.style(ComponentColour.LIGHT_GRAY, "cosmosportals.ui.help.colour_three")

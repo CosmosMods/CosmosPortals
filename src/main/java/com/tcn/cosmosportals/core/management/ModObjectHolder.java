@@ -4,6 +4,7 @@ import com.tcn.cosmosportals.client.container.ContainerContainerWorkbench;
 import com.tcn.cosmosportals.client.container.ContainerPortalDock;
 import com.tcn.cosmosportals.client.container.ContainerPortalDockUpgraded;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityContainerWorkbench;
+import com.tcn.cosmosportals.core.blockentity.BlockEntityDockController;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortal;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDock;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDockUpgraded;
@@ -65,6 +66,11 @@ public class ModObjectHolder {
 	@ObjectHolder(registryName = "minecraft:menu", value = "cosmosportals:container_portal_dock_upgraded")
 	public static final MenuType<ContainerPortalDockUpgraded> container_portal_dock_upgraded = null;
 
+	@ObjectHolder(registryName = "minecraft:block", value = "cosmosportals:block_dock_controller")
+	public static final Block block_dock_controller = null;
+	@ObjectHolder(registryName = "minecraft:block_entity_type", value = "cosmosportals:tile_dock_controller")
+	public static final BlockEntityType<BlockEntityDockController> tile_dock_controller = null;
+	
 	@ObjectHolder(registryName = "minecraft:block", value = "cosmosportals:block_container_workbench")
 	public static final Block block_container_workbench = null;
 	@ObjectHolder(registryName = "minecraft:block_entity_type", value = "cosmosportals:tile_container_workbench")

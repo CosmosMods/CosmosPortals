@@ -13,10 +13,10 @@
         }
     },
     "textures": {
-        "particle": "cosmosportals:block/dock_base",
-        "base": "cosmosportals:block/dock_base",
-        "overlay": "cosmosportals:block/dock_overlay",
-        "overlay1": "cosmosportals:block/dock_overlay_upgraded"
+        "particle": "cosmosportals:block/dock/base",
+        "base": "cosmosportals:block/dock/base",
+        "overlay": "cosmosportals:block/dock/overlay",
+        "overlay1": "cosmosportals:block/dock/overlay_upgraded"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

@@ -13,11 +13,10 @@ import com.tcn.cosmoslibrary.common.interfaces.block.IBlockInteract;
 import com.tcn.cosmoslibrary.common.interfaces.block.IBlockNotifier;
 import com.tcn.cosmoslibrary.common.interfaces.blockentity.IBlockEntityUIMode;
 import com.tcn.cosmoslibrary.common.lib.ComponentColour;
-import com.tcn.cosmoslibrary.common.lib.ComponentHelper;
 import com.tcn.cosmoslibrary.registry.gson.object.ObjectDestinationInfo;
 import com.tcn.cosmoslibrary.registry.gson.object.ObjectPlayerInformation;
-import com.tcn.cosmosportals.client.container.ContainerPortalDockUpgraded;
 import com.tcn.cosmosportals.core.block.AbstractBlockPortalDock;
+import com.tcn.cosmosportals.core.block.BlockPortal;
 import com.tcn.cosmosportals.core.item.ItemPortalContainer;
 import com.tcn.cosmosportals.core.management.CoreSoundManager;
 import com.tcn.cosmosportals.core.management.ModObjectHolder;
@@ -46,10 +45,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -82,6 +78,7 @@ public abstract class AbstractBlockEntityPortalDock extends BlockEntity implemen
 	public int currentSlotIndex = 0;
 	public int maxSlotIndex = 0;
 	private boolean currentlyChanging = false;
+	private int changeToSlot = -1;
 	
 	public EnumAllowedEntities allowedEntities = EnumAllowedEntities.ALL;
 
@@ -249,8 +246,14 @@ public abstract class AbstractBlockEntityPortalDock extends BlockEntity implemen
 		}
 		
 		if (entityIn.currentlyChanging) {
-			entityIn.selectNextSlot(true);
-			entityIn.currentlyChanging = false;
+			if (entityIn.changeToSlot == -1) {
+				entityIn.selectNextSlot(true);
+				entityIn.currentlyChanging = false;
+			} else {
+				entityIn.setCurrentSlot(entityIn.changeToSlot);
+				entityIn.changeToSlot = -1;
+				entityIn.currentlyChanging = false;
+			}
 		}
 	}
 
@@ -263,9 +266,6 @@ public abstract class AbstractBlockEntityPortalDock extends BlockEntity implemen
 		
 		int slotFull = this.getNextSlotItem(false);
 		int slotEmpty = this.getNextSlotItem(true);
-
-		System.out.println("SlotEmpty [" + slotEmpty + "] || SlotFull [" + slotFull + "]");
-		System.out.println("EmptyHand: " + stackIn.isEmpty());
 		
 		if(playerIn.isShiftKeyDown()) {
 			if (stackIn.getItem().equals(ModObjectHolder.item_dimension_container) && this.getItem(slotEmpty).isEmpty() && !(stackIn.isEmpty())) {
@@ -281,7 +281,6 @@ public abstract class AbstractBlockEntityPortalDock extends BlockEntity implemen
 				
 				return InteractionResult.SUCCESS;
 			} else if (!(this.getItem(slotFull).isEmpty())) {
-				System.out.println("NOT HERE");
 				this.destroyPortalClean();
 
 				if (this.isPortalFormed && this.playSound) {
@@ -364,8 +363,28 @@ public abstract class AbstractBlockEntityPortalDock extends BlockEntity implemen
 			this.sendUpdates(true);
 		}
 		
-		if (levelIn.hasNeighborSignal(posIn)) {
-			this.currentlyChanging = true;
+		if (!levelIn.isClientSide) {
+			if (levelIn.hasNeighborSignal(posIn) && !this.currentlyChanging) {
+				this.currentlyChanging = true;
+			}
+		}
+		
+		boolean found = false;
+		
+		for (Direction c: Direction.values()) {
+			BlockPos offsetPos = posIn.offset(c.getNormal());
+			
+			if (levelIn.getBlockState(offsetPos).getBlock() instanceof BlockPortal) {
+				found = true;
+			}
+		}
+		
+		if (!found && this.isPortalFormed) {
+			this.destDimension = new ResourceLocation("");
+			this.destInfo = new ObjectDestinationInfo(BlockPos.ZERO, 0, 0);
+			this.isPortalFormed = false;
+			this.playPowerDownSound = true;
+			this.sendUpdates(true);
 		}
 	}
 	
@@ -484,13 +503,15 @@ public abstract class AbstractBlockEntityPortalDock extends BlockEntity implemen
 		this.updatePortalBlocks(EnumPortalSettings.SHOW_PARTICLES, this.showParticles, null, -1);
 	}
 	
-	public void updateColour(ComponentColour colourIn) {
+	public void updateColour(ComponentColour colourIn, int slotIndexIn) {
+		int slotToUpdate = slotIndexIn >= 0 ? slotIndexIn : this.currentSlotIndex;
+		
 		if (colourIn.isEmpty()) {
-			this.customColours[this.currentSlotIndex] = ComponentColour.EMPTY;
+			this.customColours[slotToUpdate] = ComponentColour.EMPTY;
 			
 			this.updatePortalBlocks(EnumPortalSettings.DISPLAY_COLOUR, false, null, this.getDisplayColour());
 		} else {
-			this.customColours[this.currentSlotIndex] = colourIn;
+			this.customColours[slotToUpdate] = colourIn;
 			
 			this.updatePortalBlocks(EnumPortalSettings.DISPLAY_COLOUR, false, null, colourIn.dec());
 		}
@@ -625,6 +646,25 @@ public abstract class AbstractBlockEntityPortalDock extends BlockEntity implemen
 		return this.checkIfOwner(playerIn);
 	}
 	
+	public ComponentColour[] getCustomColours(boolean checkSlots) {
+		ComponentColour[] newColours = new ComponentColour[] { customColours[0], customColours[1], customColours[2], customColours[3] };
+		
+		if (checkSlots) {
+			for (int i = 0; i <= this.maxSlotIndex; i++) {
+				ItemStack stack = this.getItem(i);
+				
+				if (stack.getItem() instanceof ItemPortalContainer) {
+					ItemPortalContainer item = (ItemPortalContainer) stack.getItem();
+					
+					if (customColours[i] == ComponentColour.EMPTY) {
+						newColours[i] = ComponentColour.col(item.getContainerDisplayColour(stack));
+					}
+				}
+			}
+		}
+		return newColours;
+	}
+	
 	public ComponentColour getCustomColour() {
 		return this.customColours[this.currentSlotIndex];
 	}
@@ -694,10 +734,9 @@ public abstract class AbstractBlockEntityPortalDock extends BlockEntity implemen
 						float[] rotation = new float[] { position_data.getFloat("pos_yaw"), position_data.getFloat("pos_pitch") };
 
 						if (this.createPortal(this.getLevel(), this.getBlockPos(), dimension, new BlockPos(position[0], position[1], position[2]), rotation[0], rotation[1], colour)) {
-							
 							if (this.playSound) {
-								this.getLevel().playLocalSound(this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.4F, 1.0F, false);
-								this.getLevel().playLocalSound(this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D, CoreSoundManager.PORTAL_CREATE.get(), SoundSource.BLOCKS, 0.4F, 1.0F, false);
+								this.getLevel().playSound((Player) null, this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.4F, 1.0F);
+								this.getLevel().playSound((Player) null, this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D, CoreSoundManager.PORTAL_CREATE.get(), SoundSource.BLOCKS, 0.4F, 1.0F);
 							}
 							
 							this.setDestDimension(dimension);
@@ -734,8 +773,10 @@ public abstract class AbstractBlockEntityPortalDock extends BlockEntity implemen
 	
 	public void setCurrentSlot(int newSlot) {
 		if (newSlot >= 0 && newSlot <= this.maxSlotIndex) {
-			this.currentSlotIndex = newSlot;
-			this.updatePortalBasedOnSlot();
+			if (newSlot != this.currentSlotIndex || !this.isPortalFormed) {
+				this.currentSlotIndex = newSlot;
+				this.updatePortalBasedOnSlot();
+			}
 		}
 	}
 	

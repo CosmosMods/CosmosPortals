@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"": {
+			"model": "cosmosportals:block/dock_controller/base"
+		}
+	}
+}

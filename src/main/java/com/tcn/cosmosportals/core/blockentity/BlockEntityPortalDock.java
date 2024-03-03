@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityPortalDock extends AbstractBlockEntityPortalDock {
 
 	public BlockEntityPortalDock(BlockPos posIn, BlockState stateIn) {
-		super(ModObjectHolder.tile_portal_dock, posIn, stateIn, 1);
+		super(ModObjectHolder.tile_portal_dock, posIn, stateIn, 0);
 	}
 
 	@Override

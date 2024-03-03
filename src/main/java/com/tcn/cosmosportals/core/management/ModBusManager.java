@@ -15,24 +15,29 @@ import com.tcn.cosmosportals.client.container.ContainerContainerWorkbench;
 import com.tcn.cosmosportals.client.container.ContainerPortalDock;
 import com.tcn.cosmosportals.client.container.ContainerPortalDockUpgraded;
 import com.tcn.cosmosportals.client.renderer.RendererContainerWorkbench;
+import com.tcn.cosmosportals.client.renderer.RendererDockController;
 import com.tcn.cosmosportals.client.renderer.RendererPortalDock;
 import com.tcn.cosmosportals.client.screen.ScreenConfigurationCommon;
 import com.tcn.cosmosportals.client.screen.ScreenContainerWorkbench;
 import com.tcn.cosmosportals.client.screen.ScreenPortalDock;
 import com.tcn.cosmosportals.client.screen.ScreenPortalDockUpgraded;
 import com.tcn.cosmosportals.core.block.BlockContainerWorkbench;
+import com.tcn.cosmosportals.core.block.BlockDockController;
 import com.tcn.cosmosportals.core.block.BlockPortal;
 import com.tcn.cosmosportals.core.block.BlockPortalDock;
 import com.tcn.cosmosportals.core.block.BlockPortalDockUpgraded;
 import com.tcn.cosmosportals.core.block.BlockPortalFrame;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityContainerWorkbench;
+import com.tcn.cosmosportals.core.blockentity.BlockEntityDockController;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortal;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDock;
 import com.tcn.cosmosportals.core.blockentity.BlockEntityPortalDockUpgraded;
 import com.tcn.cosmosportals.core.item.BlockItemContainerWorkbench;
+import com.tcn.cosmosportals.core.item.BlockItemDockController;
 import com.tcn.cosmosportals.core.item.BlockItemPortalDock;
 import com.tcn.cosmosportals.core.item.BlockItemPortalDockUpgraded;
 import com.tcn.cosmosportals.core.item.BlockItemPortalFrame;
+import com.tcn.cosmosportals.core.item.ItemCosmicWrench;
 import com.tcn.cosmosportals.core.item.ItemPortalContainer;
 import com.tcn.cosmosportals.core.item.ItemPortalGuide;
 
@@ -53,6 +58,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -96,7 +102,9 @@ public class ModBusManager {
 	public static final RegistryObject<Item> COSMIC_INGOT = addToTab(ITEMS.register("item_cosmic_ingot", () -> new CosmosItem(new Item.Properties())));
 	public static final RegistryObject<Item> COSMIC_PEARL = addToTab(ITEMS.register("item_cosmic_pearl", () -> new CosmosItem(new Item.Properties())));
 	public static final RegistryObject<Item> COSMIC_GEM = addToTab(ITEMS.register("item_cosmic_gem", () -> new CosmosItem(new Item.Properties())));
-		
+	
+	public static final RegistryObject<Item> COSMIC_WRENCH = addToTab(ITEMS.register("item_cosmic_wrench", () -> new ItemCosmicWrench(new Item.Properties().stacksTo(1))));
+	
 	public static final RegistryObject<Block> COSMIC_ORE = BLOCKS.register("block_cosmic_ore", () -> new CosmosBlock(BlockBehaviour.Properties.of().sound(SoundType.STONE).requiresCorrectToolForDrops().strength(2.0F, 3.0F)));
 	public static final RegistryObject<Item> ITEM_COSMIC_ORE = addToTab(ITEMS.register("block_cosmic_ore", () -> new BlockItem(ModObjectHolder.block_cosmic_ore, new Item.Properties())));
 	
@@ -123,6 +131,10 @@ public class ModBusManager {
 	public static final RegistryObject<BlockEntityType<?>> BLOCK_ENTITY_TYPE_PORTAL_DOCK_UPGRADED = BLOCK_ENTITY_TYPES.register("tile_portal_dock_upgraded", () -> BlockEntityType.Builder.<BlockEntityPortalDockUpgraded>of(BlockEntityPortalDockUpgraded::new, ModObjectHolder.block_portal_dock_upgraded).build(null));
 	public static final RegistryObject<MenuType<?>> MENU_TYPE_PORTAL_DOCK_UPGRADED = MENU_TYPES.register("container_portal_dock_upgraded", () -> IForgeMenuType.create(ContainerPortalDockUpgraded::new));
 	
+	public static final RegistryObject<Block> DOCK_CONTROLLER = BLOCKS.register("block_dock_controller", () -> new BlockDockController(BlockBehaviour.Properties.of()));
+	public static final RegistryObject<Item> ITEM_DOCK_CONTROLLER = addToTab(ITEMS.register("block_dock_controller", () -> new BlockItemDockController(ModObjectHolder.block_dock_controller, new Item.Properties())));
+	public static final RegistryObject<BlockEntityType<?>> BLOCK_ENTITY_TYPE_DOCK_CONTROLLER = BLOCK_ENTITY_TYPES.register("tile_dock_controller", () -> BlockEntityType.Builder.<BlockEntityDockController>of(BlockEntityDockController::new, ModObjectHolder.block_dock_controller).build(null));
+	
 	public static final RegistryObject<Block> CONTAINER_WORKBENCH = BLOCKS.register("block_container_workbench", () -> new BlockContainerWorkbench(BlockBehaviour.Properties.of().sound(SoundType.METAL).requiresCorrectToolForDrops().strength(4.0F,6.0F).noOcclusion()));
 	public static final RegistryObject<Item> ITEM_CONTAINER_WORKBENCH = addToTab(ITEMS.register("block_container_workbench", () -> new BlockItemContainerWorkbench(ModObjectHolder.block_container_workbench, new Item.Properties())));
 	public static final RegistryObject<BlockEntityType<?>> BLOCK_ENTITY_TYPE_CONTAINER_WORKBENCH = BLOCK_ENTITY_TYPES.register("tile_container_workbench", () -> BlockEntityType.Builder.<BlockEntityContainerWorkbench>of(BlockEntityContainerWorkbench::new, ModObjectHolder.block_container_workbench).build(null));
@@ -146,19 +158,40 @@ public class ModBusManager {
 		event.registerBlockEntityRenderer(ModObjectHolder.tile_portal_dock, RendererPortalDock::new);
 		event.registerBlockEntityRenderer(ModObjectHolder.tile_portal_dock_upgraded, RendererPortalDock::new);
 		event.registerBlockEntityRenderer(ModObjectHolder.tile_container_workbench, RendererContainerWorkbench::new);
+		event.registerBlockEntityRenderer(ModObjectHolder.tile_dock_controller, RendererDockController::new);
 		CosmosPortals.CONSOLE.startup("BlockEntityRenderer Registration complete.");
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void onRegisterColourHandlersEventBlock(RegisterColorHandlersEvent.Block event) {
-		CosmosRuntimeHelper.registerBlockColours(event, new BlockColour(), ModObjectHolder.block_portal_frame, ModObjectHolder.block_portal_dock, ModObjectHolder.block_portal_dock_upgraded, ModObjectHolder.block_portal);
+		CosmosRuntimeHelper.registerBlockColours(event, new BlockColour(), 
+			ModObjectHolder.block_portal_frame, 
+			ModObjectHolder.block_portal_dock, 
+			ModObjectHolder.block_portal_dock_upgraded, 
+			ModObjectHolder.block_portal,
+			ModObjectHolder.block_dock_controller
+		);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void onRegisterColourHandlersEventItem(RegisterColorHandlersEvent.Item event) {
-		CosmosRuntimeHelper.registerItemColours(event, new ItemColour(), ModObjectHolder.item_dimension_container, ModObjectHolder.block_portal_frame, ModObjectHolder.block_portal_dock, ModObjectHolder.block_portal_dock_upgraded);
+		CosmosRuntimeHelper.registerItemColours(event, new ItemColour(), 
+			ModObjectHolder.item_dimension_container, 
+			ModObjectHolder.block_portal_frame, 
+			ModObjectHolder.block_portal_dock, 
+			ModObjectHolder.block_portal_dock_upgraded,
+			ModObjectHolder.block_dock_controller
+		);
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void onModelRegistryEvent(ModelEvent.RegisterAdditional event) {
+		/*CosmosRuntimeHelper.registerSpecialModels(event, CosmosPortals.MOD_ID, 
+			"model/dock_controller_button"
+		);*/
 	}
 	
 	@OnlyIn(Dist.CLIENT)

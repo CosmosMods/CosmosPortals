@@ -219,7 +219,7 @@ public class ScreenContainerWorkbench extends CosmosScreenUIModeBE<ContainerCont
 	
 				if (button.equals(this.colourButton)) {
 					ComponentColour colour = hasShiftDown() ? ComponentColour.EMPTY : blockEntity.getCustomColour().getNextVanillaColour(true);
-					NetworkManager.sendToServer(new PacketColour(this.menu.getBlockPos(), colour));
+					NetworkManager.sendToServer(new PacketColour(this.menu.getBlockPos(), colour, -1));
 				}
 				
 				if (button.equals(this.clearButton)) {
@@ -231,7 +231,7 @@ public class ScreenContainerWorkbench extends CosmosScreenUIModeBE<ContainerCont
 			else {
 				if (button.equals(this.colourButton)) {
 					ComponentColour colour = hasShiftDown() ? ComponentColour.EMPTY : blockEntity.getCustomColour().getNextVanillaColourReverse(true);
-					NetworkManager.sendToServer(new PacketColour(this.menu.getBlockPos(), colour));
+					NetworkManager.sendToServer(new PacketColour(this.menu.getBlockPos(), colour, -1));
 				}
 			}
 		}

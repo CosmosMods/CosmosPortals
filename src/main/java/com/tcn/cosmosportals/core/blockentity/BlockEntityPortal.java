@@ -67,7 +67,7 @@ public class BlockEntityPortal extends BlockEntity {
 			
 			if (update) {
 				if (!level.isClientSide) {
-					level.setBlockAndUpdate(this.getBlockPos(), state.updateShape(Direction.DOWN, state, level, worldPosition, worldPosition));
+					level.setBlockAndUpdate(this.getBlockPos(), state.updateShape(Direction.UP, state, level, worldPosition, worldPosition));
 				}
 			}
 		}

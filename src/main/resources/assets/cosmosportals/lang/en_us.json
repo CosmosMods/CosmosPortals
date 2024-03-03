@@ -25,6 +25,8 @@
 	
 	"item.cosmosportals.item_cosmic_guide": "Cosmic Guide",
 	
+	"item.cosmosportals.item_cosmic_wrench": "Cosmic Wrench",
+	
 	"block.cosmosportals.block_portal": "Dimensional Portal",
 	"block.cosmosportals.block_portal_frame": "Portal Frame",
 	"block.cosmosportals.block_portal_dock": "Portal Dock",
@@ -35,9 +37,10 @@
 	"block.cosmosportals.block_cosmic": "Cosmic Block",
 	
 	"block.cosmosportals.block_container_workbench": "Container Workbench",
+	
+	"block.cosmosportals.block_dock_controller": "Dock Controller",
 
 	"cosmosportals.modid": "Cosmos Portals",
-	"cosmosportals.version": "[1.16.5-1.0.40]",
 	
 	"cosmosportals.gui.config.name": "Cosmos Portals Config",
 	
@@ -174,9 +177,14 @@
 	"cosmosportals.ui.help.apply_three": "if empty, reset the name.",
 	
 	"cosmosportals.ui.help.colour": "Portal Colour Button",
-	"cosmosportals.ui.help.colour_one": "Press this button to cycle the Portal",
+	"cosmosportals.ui.help.colour_one": "Press this Button to cycle the Portal",
 	"cosmosportals.ui.help.colour_two": "Colour, with all 16 of Minecraft's",
 	"cosmosportals.ui.help.colour_three": "colours available to choose from.",
+	
+	"cosmosportals.ui.help.colours": "Portal Colour Buttons",
+	"cosmosportals.ui.help.colours_one": "Press these Buttons to cycle the Portal",
+	"cosmosportals.ui.help.colours_two": "Colours, with all 16 of Minecraft's",
+	"cosmosportals.ui.help.colours_three": "colours available to choose from.",
 	
 	"cosmosportals.ui.help.workbench.container": "Input Containers",
 	"cosmosportals.ui.help.workbench.container_one": "Put a stack of containers here as when",
@@ -235,6 +243,14 @@
 	"cosmosportals.item_info.guide_one": "Contains crafting recipes, mechanics and more.",
 	"cosmosportals.item_info.guide_two": "To access the Guide, simply right click your Guide.",
 	
+	"cosmosportals.item_info.wrench": "A must have accessory for extra functionality!",
+	"cosmosportals.item_info.wrench_one": "Required for the Dock Controller Block.",
+	"cosmosportals.item_info.wrench_two": "To use: Shift-right click on a Portal Dock to store.",
+	"cosmosportals.item_info.wrench_three": "Shift-right click on a Dock Controller to link it.",
+	"cosmosportals.item_info.wrench_four": "If you hover over a Controller with this, it will highlight the linked Dock.",
+	
+	"cosmosportals.item_info.wrench_info": "Current Dock Location: ",
+	
 	"cosmosportals.block_info.frame": "Cosmic Portal Frame",
 	"cosmosportals.block_info.frame_one": "Safe for decoration.",
 	
@@ -252,6 +268,17 @@
 	"cosmosportals.block_info.workbench_one": "Used to duplicate Dimension Containers.",
 	"cosmosportals.block_info.workbench_two": "To use: Right-click to to open the UI.",
 	"cosmosportals.block_info.workbench_limit": "You must provide unlinked Dimension Containers.",
+	
+	"cosmosportals.block_info.dock_controller": "Cosmic Dock Controller",
+	"cosmosportals.block_info.dock_controller_one": "Portal Dock Controller. Used to control a Dock.",
+	"cosmosportals.block_info.dock_controller_two": "To use: Shift-right click with a Cosmic Wrench to link a Portal Dock.",
+	"cosmosportals.block_info.dock_controller_three": "Once linked, right click a numbered button to select that Slot in the Dock.",
+	
+	"cosmosportals.item.use.wrench_one": "Successfully stored Dock Info!",
+	"cosmosportals.item.use.wrench_two": "Failed to set Dock Info, dock too far from Controller!",
+	"cosmosportals.item.use.wrench_three": "Successfully set Dock Info!",
+	"cosmosportals.item.use.wrench_four": "No Dock Info available!",
+	"cosmosportals.item.use.wrench_five": "Removed Dock Info.",
 	
 	"cosmosportals.guide.button_one": "Exit",
 	"cosmosportals.guide.button_two": "Home",
